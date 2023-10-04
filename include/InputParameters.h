@@ -59,5 +59,6 @@ class InputParameters
     std::vector<std::map<std::string, double>> _cross_sections;
 
     //maps each cell with its material
+    //each cell has one material only but each material can have many cells
     std::map<int, int> _cell_material_map;
 };
