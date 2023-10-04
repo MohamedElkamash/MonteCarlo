@@ -23,25 +23,13 @@ _n_cells(2)
     //initializing material properties
     //index is the region index
 
-   // _materials_properties.reserve(_n_cells);
-
-    _materials_properties.push_back({{"scattering_xs", 0.05},
+    _cross_sections.push_back({{"scattering_xs", 0.05},
                                      {"absorption_xs", 0.12},
                                      {"nu*fission_xs", 0.15}});
 
-    _materials_properties.push_back({{"scattering_xs", 0.05},
+    _cross_sections.push_back({{"scattering_xs", 0.05},
                                      {"absorption_xs", 0.10},
                                      {"nu*fission_xs", 0.12}});
-
-/*
-    _materials_properties[0] = {{"scattering_xs", 0.05},
-                                {"absorption_xs", 0.12},
-                                {"nu*fission_xs", 0.15}};
-    
-    _materials_properties[1] = {{"scattering_xs", 0.05},
-                                {"absorption_xs", 0.10},
-                                {"nu*fission_xs", 0.12}};
-*/
 }
 
 double InputParameters::cellCount()
@@ -50,8 +38,8 @@ double InputParameters::cellCount()
 double InputParameters::binsCount(int cell_index)
 { return _n_bins[cell_index]; }
 
-std::array<double, n_cell_boundaries> InputParameters::cellCoordinates(int region_index)
-{ return _cells_coordinates[region_index]; }
+std::array<double, n_cell_boundaries> InputParameters::cellCoordinates(int cell_index)
+{ return _cells_coordinates[cell_index]; }
 
-std::map<std::string, double> InputParameters::materialProperties(int region_index)
-{ return _materials_properties[region_index]; }
+std::map<std::string, double> InputParameters::crossSections(int cell_index)
+{ return _cross_sections[cell_index]; }

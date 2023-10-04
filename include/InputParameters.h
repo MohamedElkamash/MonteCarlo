@@ -22,7 +22,7 @@ class InputParameters
     //constructor, will be updated in the future to read data from input file
     InputParameters();
 
-    //returns total number of cells in the InputParameters
+    //returns total number of cells
     double cellCount();
 
     //returns number of bins in a cell
@@ -31,8 +31,8 @@ class InputParameters
     //returns coordinates of the surfaces bounding a cell
     std::array<double, n_cell_boundaries> cellCoordinates(int cell_index);
 
-    //returns material properties of a cell
-    std::map<std::string, double> materialProperties(int cell_index);
+    //returns cross sections of a cell
+    std::map<std::string, double> crossSections(int cell_index);
 
     private:
 
@@ -46,6 +46,6 @@ class InputParameters
     //index 0: left surface & index 1: right surface
     std::vector<std::array<double, n_cell_boundaries>> _cells_coordinates;
 
-    //carries material properties of each region
-    std::vector<std::map<std::string, double>> _materials_properties;
+    //carries cross_sections of each region
+    std::vector<std::map<std::string, double>> _cross_sections;
 };
