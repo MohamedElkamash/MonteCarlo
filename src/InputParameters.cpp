@@ -9,15 +9,15 @@
 InputParameters::InputParameters() :
     
     //Enter the number of cells in the domain
-    _cells_count(2),
+    _main_cells_count(2),
 
     //Enter the number of materials in the problem
     _materials_count(2)
 
 {
     //Reserving memory
-    _bins_per_cell_count.reserve(_cells_count);
-    _cells_coordinates.reserve(_cells_count);
+    _bins_per_cell_count.reserve(_main_cells_count);
+    _cells_coordinates.reserve(_main_cells_count);
     _cross_sections.reserve(_materials_count);
 
     //Enter the coordinates of the cell boundaries
@@ -29,7 +29,7 @@ InputParameters::InputParameters() :
 
     //Enter the number of bins in each cell
     //index is the cell id
-    _bins_per_cell_count[0] = 2;
+    _bins_per_cell_count[0] = 3;
     _bins_per_cell_count[1] = 2;
 
     //Enter cross sections of each material
@@ -45,13 +45,13 @@ InputParameters::InputParameters() :
     //Enter cell material map
     //First entry is cell id
     //Second entry is the material id
-    _cell_material_map = {{0,0},
+    _main_cell_material_map = {{0,0},
                           {1,1}};
 } //End of input file
 
 
-int InputParameters::cellCount()
-{ return _cells_count; }
+int InputParameters::mainCellCount()
+{ return _main_cells_count; }
 
 int InputParameters::binsPerCellCount(int cell_id)
 { return _bins_per_cell_count[cell_id]; }
@@ -65,5 +65,5 @@ std::array<double, n_cell_boundaries> InputParameters::cellCoordinates(int cell_
 std::map<std::string, double> InputParameters::crossSections(int material_id)
 { return _cross_sections[material_id]; }
 
-std::map<int, int> InputParameters::cellMaterialMap()
-{ return _cell_material_map; }
+std::map<int, int> InputParameters::mainCellMaterialMap()
+{ return _main_cell_material_map; }

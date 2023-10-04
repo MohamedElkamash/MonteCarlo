@@ -1,0 +1,10 @@
+read inputs from a file into a dictionary
+
+initialize problem
+    define geometry
+    define material properties
+
+run problem
+
+
+finalize problem

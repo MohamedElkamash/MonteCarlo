@@ -8,10 +8,10 @@ class Material
     public:
     
     //Constructor
-    Material(const std::map<std::string, double> & cross_sections);
+    Material(int id, const std::map<std::string, double> & cross_sections);
 
     //returns material id
-    //int id();
+    int id();
     
     //returns cross sections of the material
     std::map<std::string, double> crossSections();
@@ -19,7 +19,7 @@ class Material
     private:
 
     //material id
-    //const int _id;
+    const int _id;
     
     //macroscopic cross sections in units cm^-1
     std::map<std::string, double> _cross_sections;
