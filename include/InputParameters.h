@@ -23,29 +23,41 @@ class InputParameters
     InputParameters();
 
     //returns total number of cells
-    double cellCount();
+    int cellCount();
 
     //returns number of bins in a cell
-    double binsCount(int cell_index);
+    int binsPerCellCount(int cell_id);
+
+    //returns number of materials in the problem
+    int materialCount();
 
     //returns coordinates of the surfaces bounding a cell
-    std::array<double, n_cell_boundaries> cellCoordinates(int cell_index);
+    std::array<double, n_cell_boundaries> cellCoordinates(int cell_id);
 
-    //returns cross sections of a cell
-    std::map<std::string, double> crossSections(int cell_index);
+    //returns cross sections of a material
+    std::map<std::string, double> crossSections(int material_id);
+
+    //returns a map between cells id and material id
+    std::map<int, int> cellMaterialMap();
 
     private:
 
     //number of cells in the geometry
-    const int _n_cells;
+    const int _cells_count;
 
     //number of flux bins in each cell
-    std::vector<int> _n_bins;
+    std::vector<int> _bins_per_cell_count;
+
+    //number of materials in the problem
+    const int _materials_count;
 
     //carries coordinates of surfaces bounding each region
     //index 0: left surface & index 1: right surface
     std::vector<std::array<double, n_cell_boundaries>> _cells_coordinates;
 
-    //carries cross_sections of each region
+    //carries cross_sections of each material
     std::vector<std::map<std::string, double>> _cross_sections;
+
+    //maps each cell with its material
+    std::map<int, int> _cell_material_map;
 };
