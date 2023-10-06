@@ -1,7 +1,5 @@
 #include "Material.h"
 
-#include "InputParameters.h"
-
 #include <string>
 #include <map>
 

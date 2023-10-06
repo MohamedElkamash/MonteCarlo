@@ -19,7 +19,7 @@ class Material
     private:
 
     //material id
-    const int _id;
+    int _id;
     
     //macroscopic cross sections in units cm^-1
     std::map<std::string, double> _cross_sections;

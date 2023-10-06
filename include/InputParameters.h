@@ -13,7 +13,7 @@ The user inputs the parameters of the problem, material properties, number of ce
 #include <map>
 
 //number of surfaces surrounding each cell is two only because it is 1D
-static const int n_cell_boundaries = 2;
+static const int cell_boundaries_count = 2;
 
 class InputParameters
 {
@@ -26,13 +26,13 @@ class InputParameters
     int mainCellCount();
 
     //returns number of bins in a cell
-    int binsPerCellCount(int cell_id);
+    int binsPerMainCellCount(int main_cell_id);
 
     //returns number of materials in the problem
     int materialCount();
 
     //returns coordinates of the surfaces bounding a cell
-    std::array<double, n_cell_boundaries> cellCoordinates(int cell_id);
+    std::array<double, cell_boundaries_count> cellCoordinates(int cell_id);
 
     //returns cross sections of a material
     std::map<std::string, double> crossSections(int material_id);
@@ -43,17 +43,17 @@ class InputParameters
     private:
 
     //number of cells in the geometry
-    const int _main_cells_count;
+    int _main_cells_count;
 
     //number of flux bins in each cell
-    std::vector<int> _bins_per_cell_count;
+    std::vector<int> _bins_per_main_cell_count;
 
     //number of materials in the problem
-    const int _materials_count;
+    int _materials_count;
 
     //carries coordinates of surfaces bounding each region
     //index 0: left surface & index 1: right surface
-    std::vector<std::array<double, n_cell_boundaries>> _cells_coordinates;
+    std::vector<std::array<double, cell_boundaries_count>> _cells_coordinates;
 
     //carries cross_sections of each material
     std::vector<std::map<std::string, double>> _cross_sections;
