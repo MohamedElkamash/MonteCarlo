@@ -16,6 +16,9 @@ class Material
     //returns cross sections of the material
     std::map<std::string, double> crossSections();
 
+    //returns the total cross section of the material
+    double totalCrossSection();
+
     private:
 
     //material id

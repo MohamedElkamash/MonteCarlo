@@ -29,8 +29,8 @@ InputParameters::InputParameters() :
 
     //Enter the number of bins in each cell
     //index is the cell id
-    _bins_per_main_cell_count[0] = 3;
-    _bins_per_main_cell_count[1] = 2;
+    _bins_per_main_cell_count[0] = 5;
+    _bins_per_main_cell_count[1] = 5;
 
     //Enter cross sections of each material
     //index is the material id
