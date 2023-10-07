@@ -19,8 +19,10 @@ double Material::totalCrossSection()
 { 
     double total_cross_section = 0;
 
-    for (auto i = _cross_sections.begin(); i != _cross_sections.end(); i++)
-        total_cross_section += 
-        
+    for (const auto& [key, value] : _cross_sections) 
+    {
+        total_cross_section += value;
+    }
 
+    return total_cross_section;
 }

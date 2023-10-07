@@ -25,16 +25,6 @@ int main()
     //construct Domain
     Domain domain(parameters);
 
-    
-
-
-
-    
-
-    //Domain initialization 
-    //std::vector<Material> materials;
-    //std::vector<Cell> cells;
-    //initialization::start(parameters, materials, cells);
 
  /*    //creating neutron positions of first cycle
     std::vector<double> cycle_0_x;
