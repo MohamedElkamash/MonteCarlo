@@ -14,7 +14,7 @@ int Material::id()
 std::map<std::string, double> Material::crossSections()
 { return _cross_sections; }
 
-/*
+
 double Material::totalCrossSection()
 { 
     double total_cross_section = 0;
@@ -24,4 +24,3 @@ double Material::totalCrossSection()
         
 
 }
-*/

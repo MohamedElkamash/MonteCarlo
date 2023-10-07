@@ -2,6 +2,7 @@
 #include "Material.h"
 #include "Cell.h"
 #include "Initialization.h"
+#include "Domain.h"
 #include "Neutron.h"
 #include "Sampling.h"
 
@@ -21,12 +22,21 @@ int main()
     //Read input parameters
     InputParameters parameters;
 
-    //Domain initialization 
-    std::vector<Material> materials;
-    std::vector<Cell> cells;
-    initialization::start(parameters, materials, cells);
+    //construct Domain
+    Domain domain(parameters);
 
-    //creating neutron positions of first cycle
+    
+
+
+
+    
+
+    //Domain initialization 
+    //std::vector<Material> materials;
+    //std::vector<Cell> cells;
+    //initialization::start(parameters, materials, cells);
+
+ /*    //creating neutron positions of first cycle
     std::vector<double> cycle_0_x;
     std::vector<int> born_cell_index;
     double random_number = 0;
@@ -60,6 +70,6 @@ int main()
         std::cout << neutron.mu() << "   " << neutron.distanceToNearstSurface(neutron.xNearestSurface()) << std::endl;
         //std::cout << neutron.x() << "    " << neutron.cell().xLeft() << std::endl;
     
-    }   
+    }    */
 }  
 

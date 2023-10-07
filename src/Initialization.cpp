@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 
-void initialization::start(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells)
+void initialization::domain(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells)
 {
     initialization::materials(parameters, materials);
     int main_cell_count = parameters.mainCellCount();

@@ -6,7 +6,7 @@
 
 namespace initialization
 {
-    void start(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells);
+    void domain(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells);
 
     //fills the materials vector
     void materials(InputParameters & parameters, std::vector<Material> & materials);
