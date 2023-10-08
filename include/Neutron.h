@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Cell.h"
-#include "Domain.h"
 #include <vector>
 
 class Neutron
@@ -9,7 +8,7 @@ class Neutron
     public:
 
     //constructor
-    Neutron(double x, double mu, Cell cell, const Domain & domain);
+    Neutron(double x, double mu, int id);
 
     //returns the neutron current x-coordinate
     double x();
@@ -17,8 +16,8 @@ class Neutron
     //returns the current cosine of the polar angle of the neutron relative to the x-axis
     double mu();
 
-    //returns the current cell of the neutron
-    Cell cell();
+    //returns the id of the neutron
+    int id();
 
     //checks direction of travel
     bool isMovingToRight();
@@ -46,21 +45,15 @@ class Neutron
 
     //checks if the neutron leaked outside the system
     bool isLeaked();
-
-    //simulate neutron
-    void simulate();
     
     private:
+
+    //neutron id
+    int _id;
 
     //x-coordinate of the neutron
     double _x;
 
     //cosine the polar angle of the neutron relative to the x-axis
     double _mu;
-
-    //the current cell of the neutron
-    Cell _cell;
-
-    //Domain
-    Domain _domain;
 };

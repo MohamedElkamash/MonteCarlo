@@ -1,16 +1,15 @@
 #include "Neutron.h"
+
 #include "RandomNumberGenerator.h"
 #include <cmath>
+
 #include <iostream>
 
-Neutron::Neutron(double x, double mu, Cell cell, const Domain & domain):
+Neutron::Neutron(double x, double mu, int id):
+_id(id),
 _x(x),
-_mu(mu),
-_cell(cell),
-_domain(domain)
-{
-
-}
+_mu(mu)
+{}
 
 double Neutron::x()
 { return _x; }
@@ -18,12 +17,13 @@ double Neutron::x()
 double Neutron::mu()
 { return _mu; }
 
-Cell Neutron::cell()
-{ return _cell; }
+int Neutron::id()
+{ return _id; }
 
 bool Neutron::isMovingToRight()
 { return _mu > 0; }
 
+/*
 double Neutron::xNearestSurface()
 {
     double nearest_surface = 0;
@@ -33,15 +33,15 @@ double Neutron::xNearestSurface()
         nearest_surface = _cell.xLeft();
     
     return nearest_surface;
-}
+} 
 
-double Neutron::distanceToNearstSurface()
+ double Neutron::distanceToNearstSurface()
 { return std::abs(_x - xNearestSurface()); }
 
 double Neutron::xNextCollision()
 {
     return _x + (- std::log(randomNumber()) / _cell.material().totalCrossSection() * _mu);
-} 
+}  
 
 
 /* void Neutron::simulate()

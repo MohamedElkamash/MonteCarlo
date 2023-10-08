@@ -1,7 +1,6 @@
 #include "InputParameters.h"
 #include "Domain.h"
-#include "Neutron.h"
-#include "Sampling.h"
+#include "Simulator.h"
 
 #include <iomanip>
 #include <iostream>
@@ -13,48 +12,26 @@
 #include <queue>
 #include <random>
 
-const int N_Neutrons_Per_Cycle = 20;
- 
 
 int main()
 {
     //Read input parameters
     InputParameters parameters;
 
-    //construct Domain
+    //construct Empty Domain
     Domain domain(parameters);
 
-/*     //neutron queue
-    std::queue<Neutron> neutrons;
-    std::vector<int> neutron_count_per_cell(domain.cellCount(), 0);
+    //Generate neutron cycle 0
+    domain.generateCycleZero();
 
-    for (int i = 0; i < N_Neutrons_Per_Cycle; ++i)
-    {
-        //neutron construction
-        double x = sampling::x(domain.xMin(), domain.xMax());
-        double mu = sampling::mu();
-        int cell_index = floor(x / domain.cellWidth());
-        Cell cell = domain.cells()[cell_index];
-        Neutron neutron(x, mu, cell, domain);
-        neutrons.push(neutron);
+    //Construct the simulator
+    Simulator simulator(domain);
 
-        //update neutron score
-         ++neutron_count_per_cell[cell_index];
-    }
+    simulator.run();
 
+    
 
-    std::cout << neutrons.size() << std::endl;
-
-    while(!neutrons.empty())
-    {
-        Neutron neutron = neutrons.front();
-        std::cout << neutron.x() << "    " << neutron.mu() << std::endl;
-        neutron.simulate();
-        std::cout << neutron.x() << "    " << neutron.mu() << std::endl;
-        neutrons.pop();
-    } */
-
-     //std::cout << neutrons.size() << std::endl;
+     //std::cout << neutronsQueue().size() << std::endl;
 
 /*      for (int i = 0; i < domain.cellCount(); ++i)
      {
@@ -71,7 +48,7 @@ int main()
     double x_min = cells[0].xLeft();
     double x_max = cells[cells.size()-1].xRight();
 
-    for (int i = 0; i < N_Neutrons_Per_Cycle; ++i)
+    for (int i = 0; i < N_neutronsQueue()_Per_Cycle; ++i)
     {
         x = sampling::x(x_min, x_max);
         cycle_0_x.push_back(x);
@@ -89,8 +66,8 @@ int main()
 
     double mu = 0;
 
-    //creating first cycle neutrons
-    for (int i = 0; i < N_Neutrons_Per_Cycle; ++i)
+    //creating first cycle neutronsQueue()
+    for (int i = 0; i < N_neutronsQueue()_Per_Cycle; ++i)
     {
         mu = sampling::mu();
         Neutron neutron(cycle_0_x[i], mu, cells[born_cell_index[i]]);
