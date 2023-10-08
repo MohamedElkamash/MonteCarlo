@@ -8,8 +8,6 @@ namespace sampling
     
     double mu();
 
-
-    
     int neutron_number();
 }
 

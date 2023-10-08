@@ -1,20 +1,19 @@
 #include "InputParameters.h"
-#include "Material.h"
-#include "Cell.h"
-#include "Initialization.h"
 #include "Domain.h"
 #include "Neutron.h"
 #include "Sampling.h"
 
 #include <iomanip>
 #include <iostream>
+#include <cmath>
 #include <string>
 #include <array>
 #include <vector>
 #include <map>
+#include <queue>
 #include <random>
 
-const int N_Neutrons_Per_Cycle = 10;
+const int N_Neutrons_Per_Cycle = 20;
  
 
 int main()
@@ -24,6 +23,44 @@ int main()
 
     //construct Domain
     Domain domain(parameters);
+
+/*     //neutron queue
+    std::queue<Neutron> neutrons;
+    std::vector<int> neutron_count_per_cell(domain.cellCount(), 0);
+
+    for (int i = 0; i < N_Neutrons_Per_Cycle; ++i)
+    {
+        //neutron construction
+        double x = sampling::x(domain.xMin(), domain.xMax());
+        double mu = sampling::mu();
+        int cell_index = floor(x / domain.cellWidth());
+        Cell cell = domain.cells()[cell_index];
+        Neutron neutron(x, mu, cell, domain);
+        neutrons.push(neutron);
+
+        //update neutron score
+         ++neutron_count_per_cell[cell_index];
+    }
+
+
+    std::cout << neutrons.size() << std::endl;
+
+    while(!neutrons.empty())
+    {
+        Neutron neutron = neutrons.front();
+        std::cout << neutron.x() << "    " << neutron.mu() << std::endl;
+        neutron.simulate();
+        std::cout << neutron.x() << "    " << neutron.mu() << std::endl;
+        neutrons.pop();
+    } */
+
+     //std::cout << neutrons.size() << std::endl;
+
+/*      for (int i = 0; i < domain.cellCount(); ++i)
+     {
+        std::cout << neutron_count_per_cell[i] << std::endl;
+     }
+ */
 
 
  /*    //creating neutron positions of first cycle

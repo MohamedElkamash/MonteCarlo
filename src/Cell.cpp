@@ -12,6 +12,12 @@ double Cell::xLeft()
 double Cell::xRight()
 { return _x_right; }
 
+void Cell::setXLeft(double x_left)
+{ _x_left = x_left; }
+
+void Cell::setXRight(double x_right)
+{ _x_right = x_right; }
+
 Material Cell::material()
 { return _material; }
 

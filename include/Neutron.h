@@ -1,13 +1,15 @@
 #pragma once
 
 #include "Cell.h"
+#include "Domain.h"
+#include <vector>
 
 class Neutron
 {
     public:
 
     //constructor
-    Neutron(double x, double mu, Cell & cell);
+    Neutron(double x, double mu, Cell cell, const Domain & domain);
 
     //returns the neutron current x-coordinate
     double x();
@@ -19,16 +21,16 @@ class Neutron
     Cell cell();
 
     //checks direction of travel
-    bool isMovingForward();
+    bool isMovingToRight();
 
     //returns position of the nearst surface in the direction of travel
     double xNearestSurface();
 
     //returns distance to nearst surface
-    double distanceToNearstSurface(double x_nearest_surface);
+    double distanceToNearstSurface();
 
     //returns distance to next collision
-    double distanceToNextCollision();
+    double xNextCollision();
 
     //checks if the neutron will interact before reach the surface
     bool willInteract();
@@ -44,6 +46,9 @@ class Neutron
 
     //checks if the neutron leaked outside the system
     bool isLeaked();
+
+    //simulate neutron
+    void simulate();
     
     private:
 
@@ -53,6 +58,9 @@ class Neutron
     //cosine the polar angle of the neutron relative to the x-axis
     double _mu;
 
-    //current cell
-    Cell & _cell;
+    //the current cell of the neutron
+    Cell _cell;
+
+    //Domain
+    Domain _domain;
 };

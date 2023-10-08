@@ -17,12 +17,5 @@ std::map<std::string, double> Material::crossSections()
 
 double Material::totalCrossSection()
 { 
-    double total_cross_section = 0;
-
-    for (const auto& [key, value] : _cross_sections) 
-    {
-        total_cross_section += value;
-    }
-
-    return total_cross_section;
+    return _cross_sections["scattering_xs"] + _cross_sections["absorption_xs"];
 }

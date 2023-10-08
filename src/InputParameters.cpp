@@ -24,8 +24,8 @@ InputParameters::InputParameters() :
     //index is the cell id
     //first entry is the left boundary coordinate
     //second entry is the right boundary coordinate
-    _cells_coordinates[0] = {0.0, 0.5};
-    _cells_coordinates[1] = {0.5, 1.0};
+    _cells_coordinates[0] = {0.0, 50};
+    _cells_coordinates[1] = {50, 100};
 
     //Enter the number of bins in each cell
     //index is the cell id
