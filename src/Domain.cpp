@@ -81,8 +81,15 @@ double Domain::xNextCollision()
     return x + (- std::log(randomNumber()) / _cells[cell_index].material().totalCrossSection() * mu);
 }  
 
-double Domain::xMin()
-{ return _cells[0].xLeft(); }
+bool Domain::isAbsorbed(int material_id)
+{
+    double random_number = randomNumber();
+    double absorption_xs = _materials[material_id].crossSections()["absorption_xs"];
+    double total_xs = _materials[material_id].totalCrossSection();
+    double relative_absorption_xs = absorption_xs / total_xs;
 
-double Domain::xMax()
-{ return _cells[_cells.size()-1].xRight(); }
+    return random_number < relative_absorption_xs;
+}
+
+bool Domain::willLeak(double x, double mu)
+{ return (x + cellWidth()) >= xMax() && mu > 0 || (x - cellWidth()) <= xMin() & mu < 0; }

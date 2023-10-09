@@ -29,7 +29,6 @@ int main()
 
     simulator.run();
 
-    
 
      //std::cout << neutronsQueue().size() << std::endl;
 

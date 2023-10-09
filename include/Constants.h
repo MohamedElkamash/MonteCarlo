@@ -1,1 +1,1 @@
-const int N_Neutrons_Per_Cycle = 20;
+const int N_Neutrons_Per_Cycle = 2;

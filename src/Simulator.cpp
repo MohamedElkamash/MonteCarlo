@@ -8,39 +8,18 @@ _domain(domain)
  
 void Simulator::run()
 {
-    std::cout << _domain.neutrons().size() << std::endl;
-
+    //std::cout << _domain.neutrons().size() << std::endl;
     std::queue<Neutron> & neutron_queue = _domain.neutrons();
 
     while(!neutron_queue.empty())
     {
         Neutron & neutron = neutron_queue.front();
-
-        double x_nearest_surface = _domain.xNearestSurface();
-        double x_next_collision = _domain.xNextCollision();
-
-        bool will_collide = _domain.isNeutronMovingToRight() && x_nearest_surface > x_next_collision || 
-                           !_domain.isNeutronMovingToRight() && x_nearest_surface < x_next_collision;
-
-        std::cout << neutron.x() << "         " << neutron.mu() << std::endl;
-        std::cout << x_nearest_surface << "        " << x_next_collision << std::endl;
-        
-        if (will_collide)
-        {
-            neutron.xUpdate(x_next_collision);
-        }
-
-        else
-        {
-            neutron.xUpdate(x_nearest_surface);;
-        }
-
-        std::cout << neutron.x() << "         " << neutron.mu() << std::endl;
-        
-        neutron_queue.pop();    
+        std::cout << "neutron id: " << neutron.id() << std::endl;
+        simulate(neutron);
+        neutron_queue.pop();
+        std::cout << std::endl;  
     }
-    
-    std::cout << neutron_queue.size() << std::endl;
+    //std::cout << neutron_queue.size() << std::endl;
 }
 
 bool Simulator::isFirstCloser(double x, double y, double mu)
@@ -49,96 +28,137 @@ bool Simulator::isFirstCloser(double x, double y, double mu)
 bool Simulator::isLeaked(double x, double mu)
 { return x > _domain.xMax() && mu > 0 || x < _domain.xMin() && mu < 0; }
 
+void Simulator::absorb(Neutron & neutron)
+{
+    std::cout << "absorbed" << std::endl;
+}
+
+void Simulator::scatter(Neutron & neutron)
+{
+    std::cout << "scattered" << std::endl;
+    //sample scattering angle
+    //sample phi
+    //update mu
+}
+
+
+
 
 void Simulator::simulate(Neutron & neutron)
 {
     bool is_absorbed = false;
     bool is_leaked = false;
-    bool is_material_changed = false;
-    double x = neutron.x();
-    double mu = neutron.mu();
-    double x_next_collision = _domain.xNextCollision();
+    bool is_collision_closer = true;
+    double x_nearest_collision = _domain.xNextCollision();
     double x_nearest_surface = _domain.xNearestSurface();
     
-    int material_index = _domain.cells()[cell_index].material().id();
-    bool is_collision_closer = true;
-
-    bool is_material_changed = false;
-
-    //if (is_material_changed)
-        //x_next_collision = _domain.xNextCollision();
-
-    
-    while (!is_absorbed || !is_leaked)
+    while (!is_absorbed && !is_leaked)
     {
-        int cell_index = _domain.neutronCellIndex(x);
-        is_collision_closer = isFirstCloser(x_next_collision, x_nearest_surface, mu);
+        int neutron_cell_index = _domain.neutronCellIndex(neutron.x());
+        int current_cell_material_id = _domain.cells()[neutron_cell_index].material().id();
+        is_collision_closer = isFirstCloser(x_nearest_collision, x_nearest_surface, neutron.mu());
         if (is_collision_closer)
         {
-            update x to collision position
-            sample interaction;
-            if (scattering)
+            neutron.xUpdate(x_nearest_collision);
+            is_absorbed = _domain.isAbsorbed(current_cell_material_id);
+            if(is_absorbed)
             {
-                sample phi
-                sample scattering angle
-                update mu
-                x_nex_collision = _domain.xNextCollision();
+                absorb(neutron);
             }
-            else (absorption)
+            else //scattered
             {
-                absorbed = true
+                scatter(neutron);
+                x_nearest_collision = _domain.xNextCollision();
             }
         }
-        else(no collision)
+
+        else //no first collision
         {
-                material_index
-                x_limit
-                x_nearest_surface
-                x_nearest_collision
-                for (int i = cell_index; i < _domain.cells()[_domain.cells().size()]; ++i)
+            neutron_cell_index = _domain.neutronCellIndex(neutron.x());
+            if (neutron.mu() > 0)
+                for (int i = neutron_cell_index; i < _domain.cells().size(); ++i)
                 {
-                    if (isleaked)
-                        isleaked = true;
-                        xupdate to xnextsurface
-                        break
+                    if (_domain.willLeak(neutron.x(), neutron.mu()))
+                    {
+                        is_leaked = true;
+                        neutron.xUpdate(x_nearest_surface);
+                        std::cout << "leaked" << std::endl;
+                        break;
+                    } 
 
-                    ++x_nearest_surface
-                    ++cell_index 
-                    material index = new_material_index
-                    if (material_index != old_material_index)
-                        x_nearest_collision = 
-                        update x to x nearest surface
-                        break
-                    
-                    if(x nearest surface > x next collision)
-                        xupdate to collide position
-                        collide
-                        break
-                    
-                    
+                    std::cout << "changed cell" << std::endl;
 
+                    x_nearest_surface += _domain.cellWidth();
+                    current_cell_material_id = _domain.cells()[i].material().id();
+                    int adjacent_cell_material_id = _domain.cells()[i+1].material().id();
+                    if (current_cell_material_id != adjacent_cell_material_id)
+                    {
+                        x_nearest_collision = _domain.xNextCollision();
+                        neutron.xUpdate(x_nearest_surface);
+                        std::cout << "new cell has different material" << std::endl;
+                        break;
+                    }
+                    std::cout << "new cell has same material" << std::endl;
 
+                    if (x_nearest_surface > x_nearest_collision)
+                    {
+                        std::cout << "interacted in the new cell" << std::endl;
+                        neutron.xUpdate(x_nearest_collision);
+                        is_absorbed = _domain.isAbsorbed(current_cell_material_id);
+                        if(is_absorbed)
+                        {
+                            absorb(neutron);
+                        }
+                        else //scattered
+                        {
+                            scatter(neutron);
+                            x_nearest_collision = _domain.xNextCollision();
+                        }
+                        break;
+                    }
                 }
-            }
 
+            else //mu < 0
+                for (int i = neutron_cell_index; i >= 0; --i)
+                {
+                    if (_domain.willLeak(neutron.x(), neutron.mu()))
+                    {
+                        is_leaked = true;
+                        neutron.xUpdate(x_nearest_surface);
+                        std::cout << "leaked" << std::endl;
+                        break;
+                    } 
+                    std::cout << "changed cell" << std::endl;
 
-        }
+                    x_nearest_surface -= _domain.cellWidth();
+                    current_cell_material_id = _domain.cells()[i].material().id();
+                    int adjacent_cell_material_id = _domain.cells()[i-1].material().id();
+                    if (current_cell_material_id != adjacent_cell_material_id)
+                    {
+                        x_nearest_collision = _domain.xNextCollision();
+                        neutron.xUpdate(x_nearest_surface);
+                        std::cout << "new cell has different material" << std::endl;
+                        break;
+                    }
 
-
-
-        
-        
-            
-
-
-
-
-
-
-
-
-
-    }
-
+                    if (x_nearest_surface < x_nearest_collision) //it will collide becasue mu is negative
+                    {
+                        std::cout << "interacted in the new cell" << std::endl;
+                        neutron.xUpdate(x_nearest_collision);
+                        is_absorbed = _domain.isAbsorbed(current_cell_material_id);
+                        if(is_absorbed)
+                        {
+                            absorb(neutron);
+                        }
+                        else //scattered
+                        {
+                            scatter(neutron);
+                            x_nearest_collision = _domain.xNextCollision();
+                        }
+                        break;
+                    }
+                }
+        } //end no first collision
+    } 
 }
 

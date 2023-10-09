@@ -33,10 +33,10 @@ class Domain
     //returns the neutron to cell map
     //std::map<int, int> neutronToCellMap();
 
-    //returns x_min of the domain
+    //returns the x coordinate of the left boundary of the domain
     double xMin();
 
-    //returns x_max of the domain
+    //returns the x coordinate of the right boundary of the domain
     double xMax();
 
     //returns number of cells in the domain
@@ -70,22 +70,16 @@ class Domain
     //bool willInteract();
 
     //updates the neutron x-coordinate
-    void xUpdate();
+    //void xUpdate();
 
     //checks if the neutron is absorbed
-    bool isAbsorbed();
+    bool isAbsorbed(int material_id);
 
     //updates the neutron cosine of polar angle
     void muUpdate();
 
     //checks if the neutron leaked outside the system
-    bool isLeaked();
-
-    //returns the x coordinate of the left boundary of the domain
-    double xMin();
-
-    //returns the x coordinate of the right boundary of the domain
-    double xMax();
+    bool willLeak(double x, double mu);
 
     private:
 

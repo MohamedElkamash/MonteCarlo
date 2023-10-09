@@ -21,40 +21,24 @@ class Simulator
     //check if reached limits
     bool isLeaked(double x, double mu);
 
+    //scatters the neutron
+    void scatter(Neutron & neutron);
+
+    //absorbs the neutron
+    void absorb(Neutron & neutron);
+
+    //carrys leakage logic
+    void leak(Neutron & neutron);
+
+    //collide routine
+    void interact(Neutron & neutron, bool & is_absorbed);
+
+
+
+    
     private:
     
     Domain & _domain;
 
 
 };
-
-/* class Experiment
-
-{
-
-    public:
-        Experiment();
-
-        void Simulate(Domain & domain, int Number_of_cycles);
-
-        Experiment::simulate(Domain & domain, int Number_of_cycles)
-        {
-            for neutron in neutrons
-            distance to next collision //
-            distance to next surface
-            willcollide
-
-        }
-
-
-
-
-
-
-    
-
-
-
-
-
-} */

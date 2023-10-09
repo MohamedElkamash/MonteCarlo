@@ -8,5 +8,7 @@ double sampling::x(double x_min, double x_max)
 double sampling::mu()
 { return 2 * randomNumber() - 1; }
 
-int sampling::neutron_number()
-{return 0;}
+
+
+//int sampling::neutron_number()
+//{return 0;}
