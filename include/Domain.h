@@ -28,7 +28,7 @@ class Domain
     std::queue<Neutron> & neutrons();
 
     //returns the first neutron in the queue
-    Neutron neutron();
+    //Neutron neutron();
 
     //returns the neutron to cell map
     //std::map<int, int> neutronToCellMap();
@@ -67,7 +67,7 @@ class Domain
     double xNextCollision();
 
     //checks if the neutron will interact before reach the surface
-    bool willInteract();
+    //bool willInteract();
 
     //updates the neutron x-coordinate
     void xUpdate();
@@ -80,6 +80,12 @@ class Domain
 
     //checks if the neutron leaked outside the system
     bool isLeaked();
+
+    //returns the x coordinate of the left boundary of the domain
+    double xMin();
+
+    //returns the x coordinate of the right boundary of the domain
+    double xMax();
 
     private:
 

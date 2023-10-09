@@ -17,8 +17,8 @@ std::vector<Material> Domain::materials()
 std::queue<Neutron> & Domain::neutrons()
 { return _neutrons; }
 
-Neutron Domain::neutron()
-{ return _neutrons.front(); }
+//Neutron Domain::neutron()
+//{ return _neutrons.front(); }
 
 //std::map<int, int> Domain::neutronToCellMap()
 //{ return _neutron_to_cell_map; }
@@ -81,16 +81,8 @@ double Domain::xNextCollision()
     return x + (- std::log(randomNumber()) / _cells[cell_index].material().totalCrossSection() * mu);
 }  
 
-bool Domain::willInteract()
-{
-       if (will_collide)
-    {
-        _x = x_next_collision;
-        _cell = _domain.cells()[0];
-    }
+double Domain::xMin()
+{ return _cells[0].xLeft(); }
 
-    else
-    {
-        _x = x_nearest_surface;
-    } */
-}
+double Domain::xMax()
+{ return _cells[_cells.size()-1].xRight(); }

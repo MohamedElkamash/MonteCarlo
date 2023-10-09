@@ -19,7 +19,7 @@ class Neutron
     //returns the id of the neutron
     int id();
 
-    //checks direction of travel
+    /* //checks direction of travel
     bool isMovingToRight();
 
     //returns position of the nearst surface in the direction of travel
@@ -33,9 +33,9 @@ class Neutron
 
     //checks if the neutron will interact before reach the surface
     bool willInteract();
-
+ */
     //updates the neutron x-coordinate
-    void xUpdate();
+    void xUpdate(double x);
 
     //checks if the neutron is absorbed
     bool isAbsorbed();

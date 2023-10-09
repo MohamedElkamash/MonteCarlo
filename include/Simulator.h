@@ -9,7 +9,17 @@ class Simulator
     //constructor
     Simulator(Domain & domain);
 
+    //starts the simulator
     void run();
+
+    //simulates the neutron
+    void simulate(Neutron & neutron);
+
+    //min two positions
+    bool isFirstCloser(double x, double y, double mu);
+
+    //check if reached limits
+    bool isLeaked(double x, double mu);
 
     private:
     

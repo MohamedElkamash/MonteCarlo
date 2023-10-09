@@ -20,8 +20,11 @@ double Neutron::mu()
 int Neutron::id()
 { return _id; }
 
-bool Neutron::isMovingToRight()
-{ return _mu > 0; }
+void Neutron::xUpdate(double x)
+{ _x = x; }
+
+//bool Neutron::isMovingToRight()
+//{ return _mu > 0; }
 
 /*
 double Neutron::xNearestSurface()
@@ -44,26 +47,8 @@ double Neutron::xNextCollision()
 }  
 
 
-/* void Neutron::simulate()
-{
-    double x_nearest_surface = xNearestSurface();
-    std::cout << x_nearest_surface << std::endl;
-    double x_next_collision = xNextCollision();
-    std::cout << x_next_collision << std::endl;
-    bool will_collide = isMovingToRight() && x_nearest_surface > x_next_collision || 
-                       !isMovingToRight() && x_nearest_surface < x_next_collision;
-
-    if (will_collide)
-    {
-        _x = x_next_collision;
-        _cell = _domain.cells()[0];
-    }
-
-    else
-    {
-        _x = x_nearest_surface;
-    } */
+//
 
     
 
-//} 
+//}*/
