@@ -1,5 +1,6 @@
 #include "Simulator.h"
 
+#include "Constants.h"
 #include <iostream>
 
 Simulator::Simulator(Domain & domain):
@@ -26,7 +27,7 @@ bool Simulator::isFirstCloser(double x, double y, double mu)
 { return x < y && mu > 0 || x > y && mu < 0; }
 
 bool Simulator::isLeaked(double x, double mu)
-{ return x > _domain.xMax() && mu > 0 || x < _domain.xMin() && mu < 0; }
+{ return x >= _domain.xMax() && mu > 0 || x <= _domain.xMin() && mu < 0; }
 
 void Simulator::absorb(Neutron & neutron)
 {
@@ -41,9 +42,6 @@ void Simulator::scatter(Neutron & neutron)
     //update mu
 }
 
-
-
-
 void Simulator::simulate(Neutron & neutron)
 {
     bool is_absorbed = false;
@@ -51,6 +49,8 @@ void Simulator::simulate(Neutron & neutron)
     bool is_collision_closer = true;
     double x_nearest_collision = _domain.xNextCollision();
     double x_nearest_surface = _domain.xNearestSurface();
+    std::cout << neutron.x() << std::endl;
+    std::cout << neutron.mu() << std::endl;
     
     while (!is_absorbed && !is_leaked)
     {
@@ -78,7 +78,7 @@ void Simulator::simulate(Neutron & neutron)
             if (neutron.mu() > 0)
                 for (int i = neutron_cell_index; i < _domain.cells().size(); ++i)
                 {
-                    if (_domain.willLeak(neutron.x(), neutron.mu()))
+                    if (isLeaked(x_nearest_surface, neutron.mu()))
                     {
                         is_leaked = true;
                         neutron.xUpdate(x_nearest_surface);
@@ -93,8 +93,8 @@ void Simulator::simulate(Neutron & neutron)
                     int adjacent_cell_material_id = _domain.cells()[i+1].material().id();
                     if (current_cell_material_id != adjacent_cell_material_id)
                     {
+                        neutron.xUpdate(x_nearest_surface - _domain.cellWidth() + eta);
                         x_nearest_collision = _domain.xNextCollision();
-                        neutron.xUpdate(x_nearest_surface);
                         std::cout << "new cell has different material" << std::endl;
                         break;
                     }
@@ -121,7 +121,7 @@ void Simulator::simulate(Neutron & neutron)
             else //mu < 0
                 for (int i = neutron_cell_index; i >= 0; --i)
                 {
-                    if (_domain.willLeak(neutron.x(), neutron.mu()))
+                    if (isLeaked(x_nearest_surface, neutron.mu()))
                     {
                         is_leaked = true;
                         neutron.xUpdate(x_nearest_surface);
@@ -135,11 +135,13 @@ void Simulator::simulate(Neutron & neutron)
                     int adjacent_cell_material_id = _domain.cells()[i-1].material().id();
                     if (current_cell_material_id != adjacent_cell_material_id)
                     {
+                        neutron.xUpdate(x_nearest_surface + _domain.cellWidth() - eta);
                         x_nearest_collision = _domain.xNextCollision();
-                        neutron.xUpdate(x_nearest_surface);
                         std::cout << "new cell has different material" << std::endl;
                         break;
                     }
+
+                    std::cout << "new cell has same material" << std::endl;
 
                     if (x_nearest_surface < x_nearest_collision) //it will collide becasue mu is negative
                     {
