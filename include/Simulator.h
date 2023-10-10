@@ -13,8 +13,11 @@ class Simulator
     //constructor
     Simulator(Domain & domain);
 
-    //returns the neutron queue
+    //returns the neutron bank
     std::queue<Neutron> neutronBank();
+
+    //returns the unfiltered neutron bank
+    std::queue<Neutron> unfilteredNeutronBank();
 
     //populate the neutron bank with cycle zero neutrons
     void generateCycleZero();
@@ -61,8 +64,10 @@ class Simulator
     //domain 
     Domain & _domain;
 
-    //neutron queue
+    //neutron queue to be simulated
     std::queue<Neutron> _neutron_bank;
 
-
+    //unfiltered bank contain neutrons of next cycle before filtration
+    //after the unfiltered bank is normalized it will be copied into the main neutron bank
+    std::queue<Neutron> _unfiltered_neutron_bank;
 };

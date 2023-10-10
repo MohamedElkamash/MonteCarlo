@@ -13,6 +13,9 @@ _domain(domain)
 std::queue<Neutron> Simulator::neutronBank()
 { return _neutron_bank; }
 
+std::queue<Neutron> Simulator::unfilteredNeutronBank()
+{ return _unfiltered_neutron_bank; }
+
 
 void Simulator::generateCycleZero()
 {
@@ -91,9 +94,9 @@ void Simulator::randomWalk(Neutron & neutron)
             {
                 //transport the neutron inside the cell to avoid boundary problems on the surface
                 if(neutron.isDirectionPositive())
-                    neutron.updateX(neutron.x() + eta);
+                    neutron.updateX(neutron.x() + epilson);
                 else
-                    neutron.updateX(neutron.x() - eta);
+                    neutron.updateX(neutron.x() - epilson);
 
                 //update material index
                 i_new_material = neutronMaterialIndex(neutron);
@@ -181,6 +184,27 @@ bool Simulator::isAbsorbed(Neutron & neutron)
 void Simulator::absorb(Neutron & neutron)
 {
     std::cout << "absorbed" << std::endl;
+    //get current material id of the neutron
+    int id = neutronMaterialIndex(neutron);
+    //get cross sections of the material
+    double nu_fission_xs = _domain.materials()[id].crossSections()["nu*fission_xs"];
+    double absorption_xs = _domain.materials()[id].crossSections()["absorption_xs"];
+    //calculate average number of emitted neutrons per absorption
+    double eta = nu_fission_xs / absorption_xs;
+    //sample number of generated neutrons
+    double fission_neutrons_count = sampling::fissionNeutronsCount(eta);
+    std::cout << "fission neutron count: " << fission_neutrons_count << std::endl;
+    //position of the new neutrons is the same as the absorbed neutrons
+    double x = neutron.x();
+    std::cout << "final x: " << x << std::endl;
+    //create fission neutrons and push them in the reserve bank
+    for (int i = 0; i < fission_neutrons_count; ++i)
+    {
+        //isotropic fission
+        double random_mu = sampling::mu();
+        Neutron neutron(id, x, random_mu);
+        _unfiltered_neutron_bank.push(neutron);
+    }
 }
 
 

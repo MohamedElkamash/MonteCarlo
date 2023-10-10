@@ -11,7 +11,15 @@ double sampling::mu()
 double sampling::phi()
 { return 2 * pi * randomNumber(); }
 
-
-
-//int sampling::neutron_number()
-//{return 0;}
+int sampling::fissionNeutronsCount(double eta)
+{
+    int fission_neutrons_count = 0;
+    double remainder = eta - floor(eta);
+    double random_number = randomNumber();
+    if (remainder > random_number)
+        fission_neutrons_count = ceil(eta);
+    else
+        fission_neutrons_count = floor(eta);
+        
+    return fission_neutrons_count; 
+}

@@ -27,16 +27,26 @@ int main()
     //Populate the neutron bank with neutrons of cycle zero
     simulator.generateCycleZero();
 
-/*     while(!neutron_bank.empty())
-    {
-        Neutron neutron = neutron_bank.front();
-        std::cout << neutron.id() << "   " << neutron.x() << "   " << neutron.mu() << std::endl;
-        neutron_bank.pop();
-    } 
-    std::cout << neutron_bank.size() << std::endl; */
-
-    //Start the random walk of the neutrons
-
+    //start the neutron simulation 
     simulator.run();
+
+    std::queue<Neutron> unfiltered_bank = simulator.unfilteredNeutronBank();
+
+    std::cout << unfiltered_bank.size() << std::endl;
+
+    while(!unfiltered_bank.empty())
+    {
+        Neutron neutron = unfiltered_bank.front();
+        std::cout << neutron.id() << std::endl;
+        std::cout << "x = " << neutron.x() << "     mu = " << neutron.mu() << std::endl;
+        unfiltered_bank.pop();
+    } 
+    
+    std::cout << unfiltered_bank.size() << std::endl; 
+
+
+
+
+
 
 }

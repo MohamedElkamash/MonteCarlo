@@ -10,8 +10,7 @@ namespace sampling
 
     double phi();
 
-
-    int neutron_number();
+    int fissionNeutronsCount(double eta);
 }
 
 
