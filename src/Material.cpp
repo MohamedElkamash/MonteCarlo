@@ -15,7 +15,7 @@ std::map<std::string, double> Material::crossSections()
 { return _cross_sections; }
 
 
-double Material::totalCrossSection()
+double Material::totalXS()
 { 
     return _cross_sections["scattering_xs"] + _cross_sections["absorption_xs"];
 }

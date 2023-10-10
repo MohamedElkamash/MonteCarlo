@@ -8,7 +8,8 @@ namespace sampling
     
     double mu();
 
-    bool isScattered(int material_id);
+    double phi();
+
 
     int neutron_number();
 }

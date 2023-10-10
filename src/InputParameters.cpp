@@ -34,13 +34,13 @@ InputParameters::InputParameters() :
 
     //Enter cross sections of each material
     //index is the material id
-    _cross_sections[0] = {{"scattering_xs", 0.0001},
-                          {"absorption_xs", 0},
-                          {"nu*fission_xs", 0}};
+    _cross_sections[0] = {{"scattering_xs", 0.05},
+                          {"absorption_xs", 0.12},
+                          {"nu*fission_xs", 0.15}};
 
-    _cross_sections[1] = {{"scattering_xs", 0.0001},
-                          {"absorption_xs", 1},
-                          {"nu*fission_xs", 0}};
+    _cross_sections[1] = {{"scattering_xs", 0.05},
+                          {"absorption_xs", 0.10},
+                          {"nu*fission_xs", 0.12}};
 
     //Enter cell material map
     //First entry is cell id

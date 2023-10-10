@@ -8,8 +8,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
-#include <queue>
 
 class Domain
 {
@@ -24,23 +22,14 @@ class Domain
     //returns a map of the materials in the domain
     std::vector<Material> materials();
 
-    //returns the neutron queue
-    std::queue<Neutron> & neutrons();
-
-    //returns the first neutron in the queue
-    //Neutron neutron();
-
-    //returns the neutron to cell map
-    //std::map<int, int> neutronToCellMap();
+    //returns number of cells in the domain
+    int cellCount();
 
     //returns the x coordinate of the left boundary of the domain
     double xMin();
 
     //returns the x coordinate of the right boundary of the domain
     double xMax();
-
-    //returns number of cells in the domain
-    int cellCount();
 
     //returns domain width
     double domainWidth();
@@ -51,20 +40,8 @@ class Domain
     //returns number of materials in the domain
     int materialCount();
 
-    //returns neutron cell index
-    int neutronCellIndex(double x);
 
-    //first cycle
-    void generateCycleZero();
 
-    //checks neutron direction of travel
-    bool isNeutronMovingToRight();
-
-    //returns position of the nearst surface in the direction of travel
-    double xNearestSurface();
-
-    //returns distance to next collision
-    double xNextCollision();
 
     //checks if the neutron will interact before reach the surface
     //bool willInteract();
@@ -88,10 +65,4 @@ class Domain
 
     //carrying materials information
     std::vector<Material> _materials;
-
-    //neutron queue
-    std::queue<Neutron> _neutrons;
-
-    //neutron cell map
-    //std::map<int, int> _neutron_to_cell_map;
 };
