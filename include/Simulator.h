@@ -2,6 +2,7 @@
 
 #include "Domain.h"
 #include "Neutron.h"
+#include "Tallies.h"
 #include "RandomNumberGenerator.h"
 
 #include <queue>
@@ -11,13 +12,13 @@ class Simulator
     public:
     
     //constructor
-    Simulator(Domain & domain);
+    Simulator(Domain & domain, Tallies & tallies);
 
     //returns the neutron bank
     std::queue<Neutron> neutronBank();
 
     //returns the unfiltered neutron bank
-    std::queue<Neutron> unfilteredNeutronBank();
+    //std::queue<Neutron> unfilteredNeutronBank();
 
     //populate the neutron bank with cycle zero neutrons
     void generateCycleZero();
@@ -69,5 +70,8 @@ class Simulator
 
     //unfiltered bank contain neutrons of next cycle before filtration
     //after the unfiltered bank is normalized it will be copied into the main neutron bank
-    std::queue<Neutron> _unfiltered_neutron_bank;
+    //std::queue<Neutron> _unfiltered_neutron_bank;
+
+    //tallies
+    Tallies & _tallies;
 };

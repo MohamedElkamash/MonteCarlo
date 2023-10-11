@@ -1,6 +1,7 @@
 #include "InputParameters.h"
 #include "Domain.h"
 #include "Simulator.h"
+#include "Tallies.h"
 
 #include <iomanip>
 #include <iostream>
@@ -21,8 +22,11 @@ int main()
     //Create problem domain
     Domain domain(parameters);
 
+    //Construct Tallies
+    Tallies tallies;
+
     //Initialize the simulator
-    Simulator simulator(domain);
+    Simulator simulator(domain, tallies);
 
     //Populate the neutron bank with neutrons of cycle zero
     simulator.generateCycleZero();
@@ -30,19 +34,29 @@ int main()
     //start the neutron simulation 
     simulator.run();
 
-    std::queue<Neutron> unfiltered_bank = simulator.unfilteredNeutronBank();
+/*
+    std::queue<Neutron> neutron_bank = simulator.neutronBank();
 
-    std::cout << unfiltered_bank.size() << std::endl;
+    std::cout << neutron_bank.size() << std::endl;
 
-    while(!unfiltered_bank.empty())
+    while(!neutron_bank.empty())
     {
-        Neutron neutron = unfiltered_bank.front();
-        std::cout << neutron.id() << std::endl;
-        std::cout << "x = " << neutron.x() << "     mu = " << neutron.mu() << std::endl;
-        unfiltered_bank.pop();
+        Neutron neutron = neutron_bank.front();
+        //std::cout << neutron.id() << std::endl;
+        //std::cout << "x = " << neutron.x() << "     mu = " << neutron.mu() << std::endl;
+        neutron_bank.pop();
     } 
-    
-    std::cout << unfiltered_bank.size() << std::endl; 
+*/
+/*
+    std::cout << tallies.fissionNeutrons().size() << std::endl;
+
+    int cell_count = domain.cellCount();
+    std::cout << neutron_bank.size() << std::endl;
+    for (int i = 0; i < cell_count; ++i)
+    {
+        std::cout << tallies.fissionNeutrons()[i] << std::endl;
+    }
+*/  
 
 
 
