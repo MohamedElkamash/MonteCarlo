@@ -54,3 +54,10 @@ void Tallies::fillNormalizedFissionNeutrons(int i_inactive_cycle, int bins)
             ++_normalized_fission_neutrons[i_inactive_cycle][random_bin];
     }
 }
+
+
+void Tallies::flushFissionNeutrons()
+{
+    for (int i = 0; i < _fission_neutrons.size(); ++i)
+        _fission_neutrons[i] = 0;
+}

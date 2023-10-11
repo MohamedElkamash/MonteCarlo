@@ -27,6 +27,9 @@ class Tallies
     //increment number of fission neutrons in a bin
     void incrementFissionNeutrons(int bin);
 
+    //sets the fission neutron tally to zero
+    void flushFissionNeutrons();
+
     //fill normalized fission neutrons
     void fillNormalizedFissionNeutrons(int i_inactive_cycle, int bins);
 

@@ -37,40 +37,46 @@ void Simulator::generateCycleZero()
 void Simulator::run()
 {
     int neutron_bank_size = _neutron_bank.size();
+    int bins = _domain.cellCount();
     
-    for (int i = 0; i < INACTIVE_CYCLES; ++i)
+    for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
     {
-        std::cout << "cycle :" << i << std::endl;
-        std::cout << "bank size" << _neutron_bank.size() << std::endl;
+        //keep a copy of the current fission neutrons tally before flushing to use it in filtration
+        //std::vector<int> current_cycle_fission_neutrons = _tallies.fissionNeutrons();
 
-int cell_count = _domain.cellCount();
-std::cout << "actual fission neutrons" << std::endl;
-for (int j = 0; j < cell_count; ++j)
+
+ std::cout << "cycle: " << i << "\n";
+std::cout << "actual fission neutrons" << '\n';
+for (int j = 0; j < bins; ++j)
 {
     std::cout  << _tallies.fissionNeutrons()[j] << std::endl;
 }
+std::cout << '\n'; 
 
+        //flush fission neutrons tally to populate with new generation from absorption
+        _tallies.flushFissionNeutrons();
+
+        //count number of neutrons simulated in each bin to avoid exceeding normalized number
+        std::vector<int> neutrons_simulated_count(bins, 0);
 
         for (int j = 0; j < neutron_bank_size; ++j)
         {
             Neutron neutron = _neutron_bank.front();
-            //std::cout << "neutron id: " << neutron.id() << std::endl;
-            //std::cout << "x = " << neutron.x() << "   " << "mu =  " << neutron.mu() << std::endl;
-            randomWalk(neutron);
+            int bin = neutronCellIndex(neutron);
+            ++neutrons_simulated_count[bin];
+            //filter neutron if normalized number in the corresponding bin is reached
+            if (neutrons_simulated_count[bin] < _tallies.normalizedFissionNeutrons()[i][bin])
+                randomWalk(neutron);
             _neutron_bank.pop();
-            //std::cout << std::endl; 
-        }
-        std::cout << "bank size" << _neutron_bank.size() << std::endl;
-        _tallies.fillNormalizedFissionNeutrons(i, _domain.cellCount());
+        }   
+        _tallies.fillNormalizedFissionNeutrons(i+1, bins);
 
-std::cout << "normalized" << std::endl;
-for (int j = 0; j < cell_count; ++j)
+/* std::cout << "normalized fission neutrons" << '\n';
+for (int j = 0; j < bins; ++j)
 {
     std::cout  << _tallies.normalizedFissionNeutrons()[i][j] << std::endl;
 }
-
-
-
+std::cout << '\n'; */
     }
 }
 
@@ -234,6 +240,7 @@ void Simulator::absorb(Neutron & neutron)
         Neutron neutron(id, x, random_mu);
         _neutron_bank.push(neutron);
         int cell = neutronCellIndex(neutron);
+        //tally fission neutrons
         _tallies.incrementFissionNeutrons(cell);
     }
 }

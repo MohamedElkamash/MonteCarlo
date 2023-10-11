@@ -1,10 +1,10 @@
 #pragma once
 
 //number of neutrons simulated per cycle
-const int NEUTRONS_PER_CYCLE = 1000;
+const int NEUTRONS_PER_CYCLE = 500000;
 
 //number of inactive cycles to converge fission source
-const int INACTIVE_CYCLES = 2;
+const int INACTIVE_CYCLES = 100;
 
 //number of active cycles to calculate criticality and flux
 const int ACTIVE_CYCLES = 1;
