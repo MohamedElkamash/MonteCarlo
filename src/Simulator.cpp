@@ -8,7 +8,7 @@
 Simulator::Simulator(Domain & domain, Tallies & tallies):
 _domain(domain),
 _tallies(tallies)
-{ _tallies.dimensions(INACTIVE_CYCLES, ACTIVE_CYCLES, _domain.cellCount()); }
+{ _tallies.dimensions(_domain.cellCount()); }
 
 
 std::queue<Neutron> Simulator::neutronBank()
@@ -41,17 +41,17 @@ void Simulator::run()
     
     for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
     {
-        //keep a copy of the current fission neutrons tally before flushing to use it in filtration
-        //std::vector<int> current_cycle_fission_neutrons = _tallies.fissionNeutrons();
+        //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
+        std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
 
 
- std::cout << "cycle: " << i << "\n";
-std::cout << "actual fission neutrons" << '\n';
+//std::cout << "cycle: " << i << "\n";
+/* std::cout << "actual fission neutrons" << '\n';
 for (int j = 0; j < bins; ++j)
 {
     std::cout  << _tallies.fissionNeutrons()[j] << std::endl;
 }
-std::cout << '\n'; 
+std::cout << '\n'; */ 
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
@@ -70,14 +70,19 @@ std::cout << '\n';
             _neutron_bank.pop();
         }   
         _tallies.fillNormalizedFissionNeutrons(i+1, bins);
-
-/* std::cout << "normalized fission neutrons" << '\n';
+        _tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
+    }
+/*  for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
+ {
+    std::cout << _tallies.maxRelativeChangeFission()[i] << std::endl;
+ } */      
+/*  std::cout << "normalized fission neutrons" << '\n';
 for (int j = 0; j < bins; ++j)
 {
     std::cout  << _tallies.normalizedFissionNeutrons()[i][j] << std::endl;
 }
-std::cout << '\n'; */
-    }
+std::cout << '\n'; 
+    } */
 }
 
 

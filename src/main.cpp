@@ -57,6 +57,15 @@ int main()
         std::cout << tallies.fissionNeutrons()[i] << std::endl;
     }
 */  
+    tallies.calculateShannonEntropy(domain.cellCount());
+    std::vector<double> entropy = tallies.shannonEntropy();
+
+    for (int i = 0; i < INACTIVE_CYCLES; ++i)
+    {
+        std::cout << entropy[i] << std::endl;
+    }
+
+
 
 
 
