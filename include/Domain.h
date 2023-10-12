@@ -19,6 +19,9 @@ class Domain
     //returns a vector of the cells in the domain
     std::vector<Cell> cells();
 
+    //returns vector of surfaces positions
+    std::vector<double> surfaces();
+
     //returns a map of the materials in the domain
     std::vector<Material> materials();
 
@@ -35,33 +38,19 @@ class Domain
     double domainWidth();
 
     //returns cell width
-    double cellWidth();
+    double cellWidth(int id);
 
     //returns number of materials in the domain
     int materialCount();
 
 
-
-
-    //checks if the neutron will interact before reach the surface
-    //bool willInteract();
-
-    //updates the neutron x-coordinate
-    //void xUpdate();
-
-    //checks if the neutron is absorbed
-    bool isAbsorbed(int material_id);
-
-    //updates the neutron cosine of polar angle
-    void muUpdate();
-
-    //checks if the neutron leaked outside the system
-    bool willLeak(double x, double mu);
-
     private:
 
     //carrying cells information
     std::vector<Cell> _cells;
+
+    //carrying surfaces positions
+    std::vector<double> _surfaces;
 
     //carrying materials information
     std::vector<Material> _materials;

@@ -18,7 +18,12 @@ void Cell::setXLeft(double x_left)
 void Cell::setXRight(double x_right)
 { _x_right = x_right; }
 
+double Cell::cellWidth()
+{ return _x_right - _x_left; }
+
 Material Cell::material()
 { return _material; }
+
+
 
 

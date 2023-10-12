@@ -22,7 +22,7 @@ int main()
 
     //Create problem domain
     Domain domain(parameters);
-
+    
     //Construct Tallies
     Tallies tallies;
 
@@ -36,12 +36,13 @@ int main()
     simulator.run();
 
 
-    std::vector<double> k_eff = tallies.kEff();
+/*     std::vector<double> k_eff = tallies.kEff();
     std::vector<double> rel_k_eff = tallies.relativeKeff();
     std::vector<double> k_cum = tallies.kEffCumulative();
     int size_k = k_eff.size();
     int size_rel = rel_k_eff.size();
     int size_cum = k_cum.size();
+
 
     for (int i = 0; i < size_k; ++i)
     {
@@ -61,29 +62,24 @@ int main()
     {
         std::cout << rel_k_eff[i] << '\n';
     }   
+  */
 
-
-    
-
-/*
-
-/*
-    results << tallies.fissionNeutrons().size() << std::endl;
+ /*    results << tallies.fissionNeutrons().size() << std::endl;
 
     int cell_count = domain.cellCount();
     results << neutron_bank.size() << std::endl;
     for (int i = 0; i < cell_count; ++i)
     {
         results << tallies.fissionNeutrons()[i] << std::endl;
-    }
-*/  
+    } */
+  
 
-/*     std::vector<std::vector<int>> matrix = tallies.normalizedFissionNeutrons();
-    std::ofstream results("results.csv");
+    /* std::vector<std::vector<int>> matrix = tallies.normalizedFissionNeutrons();
+    std::ofstream results("results_new.csv");
 
-    int bins = domain.cellCount(); */
-
-/*     results << "normalized fission neutrons" << '\n';
+    int bins = domain.cellCount();  */
+/* 
+     results << "normalized fission neutrons" << '\n';
     for (int i = 0; i < INACTIVE_CYCLES; ++i)
     {
         results << "cycle: " << i << std::endl;
@@ -92,13 +88,13 @@ int main()
             results  << tallies.normalizedFissionNeutrons()[i][j] << '\n';
         }
         results << ',';
-    } */
+    } */ 
 
-/* for (auto & row : matrix) {
+ /* for (auto & row : matrix) {
   for (auto col : row)
     results << col <<',';
   results << '\n';
-} */
+} */ 
 
 /*     results << "max relative change " << std::endl;
     for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
@@ -125,4 +121,4 @@ int main()
 
 
 
-}
+} 

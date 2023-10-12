@@ -6,10 +6,13 @@
 //Member Attributes
 
 Domain::Domain(InputParameters & parameters)
-{ initialization::domain(parameters, _materials, _cells); }
+{ initialization::domain(parameters, _materials, _cells, _surfaces); }
 
 std::vector<Cell> Domain::cells()
 { return _cells; }
+
+std::vector<double> Domain::surfaces()
+{ return _surfaces; }
 
 std::vector<Material> Domain::materials()
 { return _materials; }
@@ -26,8 +29,8 @@ double Domain::xMax()
 double Domain::domainWidth()
 { return xMax() - xMin(); }
 
-double Domain::cellWidth()
-{ return domainWidth() / cellCount(); } 
+double Domain::cellWidth(int id)
+{ return _cells[id].cellWidth(); } 
 
 int Domain::materialCount()
 { return _materials.size(); }
