@@ -18,6 +18,19 @@ std::queue<Neutron> Simulator::neutronBank()
 //std::queue<Neutron> Simulator::unfilteredNeutronBank()
 //{ return _unfiltered_neutron_bank; }
 
+/* void Simulator::generateCycleZero()
+{
+    for (int id = 0; id < NEUTRONS_PER_CYCLE; ++id)
+    {
+        double random_x = sampling::x(_domain.xMin(), _domain.xMax()) *  ;
+        double random_mu = sampling::mu();
+        Neutron neutron(id, random_x, random_mu);
+        int cell = neutronCellIndex(neutron);
+        _tallies.incrementFissionNeutrons(cell);
+        _neutron_bank.push(neutron);
+    }
+    _tallies.fillNormalizedFissionNeutrons(0, _domain.cellCount());
+}  */
 
 void Simulator::generateCycleZero()
 {
@@ -31,7 +44,7 @@ void Simulator::generateCycleZero()
         _neutron_bank.push(neutron);
     }
     _tallies.fillNormalizedFissionNeutrons(0, _domain.cellCount());
-}
+}  
 
 
 void Simulator::run()
@@ -39,19 +52,12 @@ void Simulator::run()
     int neutron_bank_size = _neutron_bank.size();
     int bins = _domain.cellCount();
     
-    for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
+    for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES - 1; ++i)
     {
         //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
         std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
 
-
-//std::cout << "cycle: " << i << "\n";
-/* std::cout << "actual fission neutrons" << '\n';
-for (int j = 0; j < bins; ++j)
-{
-    std::cout  << _tallies.fissionNeutrons()[j] << std::endl;
-}
-std::cout << '\n'; */ 
+        //std::cout << std::accumulate(previous_fission_neutrons.begin(), previous_fission_neutrons.end(), 0) << '\n';
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
@@ -71,19 +77,18 @@ std::cout << '\n'; */
         }   
         _tallies.fillNormalizedFissionNeutrons(i+1, bins);
         _tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
+        
+       //calculate k for active cycles only
+        if (i >=  INACTIVE_CYCLES)
+        {
+            _tallies.calculateKeff(_tallies.normalizedFissionNeutrons()[i - INACTIVE_CYCLES], 
+                                   _tallies.fissionNeutrons(), i - INACTIVE_CYCLES);
+        } 
     }
-/*  for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)
- {
-    std::cout << _tallies.maxRelativeChangeFission()[i] << std::endl;
- } */      
-/*  std::cout << "normalized fission neutrons" << '\n';
-for (int j = 0; j < bins; ++j)
-{
-    std::cout  << _tallies.normalizedFissionNeutrons()[i][j] << std::endl;
-}
-std::cout << '\n'; 
-    } */
-}
+    //calculate relative change in keff between two successive cycles
+    _tallies.calculateRelativeKEff();
+    _tallies.calculateKeffCumulative(); 
+} 
 
 
 void Simulator::randomWalk(Neutron & neutron)
@@ -260,6 +265,21 @@ void Simulator::scatter(Neutron & neutron)
     double mu_0 = sampling::mu();
     //sample azimuthal angle (in radians)
     double phi = sampling::phi();
+    //new scattering angle
+    double mu_new = mu * mu_0 + sqrt(1 - pow(mu, 2)) * sqrt(1 - pow(mu_0,2)) * cos(phi);
+    //update neutron angle
+    neutron.updateMu(mu_new);
+}
+
+//void Simulator::scatter(Neutron & neutron)
+/* {
+    //std::cout << "scattered" << std::endl;
+    //current mu
+    double mu = neutron.mu();
+    //sample scattering angle
+    double mu_0 = sampling::mu();
+    //sample azimuthal angle (in radians)
+    double phi = sampling::phi();
     double cos_phi = cos(phi);
 
     //calculate constants of the quadratic equation to solve for new mu
@@ -281,10 +301,9 @@ void Simulator::scatter(Neutron & neutron)
         mu_new = (-b - sqrt(d)) / (2 * a);
     
     ++i;
-
     //update neutron angle
     neutron.updateMu(mu_new);
-}
+} */
 
 
 bool Simulator::isLeaked(double x, double mu)

@@ -27,6 +27,12 @@ class Tallies
     //returns k_eff over active cycles
     std::vector<double> kEff();
 
+    //returns cummulative average value of k
+    std::vector<double> kEffCumulative();
+
+    //returns relative change in k eff between two cycles
+    std::vector<double> relativeKeff();
+
     //sets the dimensions of the tallies;
     void dimensions(int bins);
 
@@ -40,10 +46,20 @@ class Tallies
     void flushFissionNeutrons();
 
     //fill normalized fission neutrons
-    void fillNormalizedFissionNeutrons(int i_inactive_cycle, int bins);
+    void fillNormalizedFissionNeutrons(int i_cycle, int bins);
 
-    //calculate Shannon entropy
+    //calculates Shannon entropy
     void calculateShannonEntropy(int bins);
+
+    //calculates keff for each cycle
+    void calculateKeff(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle);
+
+    //calculates k eff cumulative
+    void calculateKeffCumulative();
+
+    //calculates relative change in k eff between two successive cycles
+    void calculateRelativeKEff();
+
 
     private:
 
@@ -62,8 +78,12 @@ class Tallies
     //k_eff over active cycles
     std::vector<double> _k_eff;
 
+    //relative change in k_eff between two successive cycles
+    std::vector<double> _relative_k_eff;
+
+    //cumulative average keff
+    std::vector<double> _k_eff_cumulative;
+
     //flux distribution over active cycles
     std::vector<std::vector<double>> _flux;
-
-
 };

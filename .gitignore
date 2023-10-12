@@ -1,4 +1,5 @@
 *.log
 *.txt
+*.csv
 .vscode
 monte
