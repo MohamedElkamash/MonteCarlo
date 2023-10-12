@@ -21,6 +21,9 @@ class Cell
     //sets the x coordinate of the right boundary of the cell
     void setXRight(double x_right);
 
+    //return the width of the cell
+    double cellWidth();
+
     //returns the material inside the cell
     Material material();
 

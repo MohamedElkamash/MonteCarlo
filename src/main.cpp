@@ -22,7 +22,17 @@ int main()
 
     //Create problem domain
     Domain domain(parameters);
+/* 
+    for (int i = 0; i < domain.cells().size(); ++i)
+    {
+        std::cout << "cell: " << i << "= " << domain.cellWidth(i) << std::endl;
+    }
 
+    for (int i =0; i <domain.surfaces().size(); ++i)
+    {
+        std::cout << "surface: " << i << "= " << domain.surfaces()[i] << std::endl;
+    } */
+    
     //Construct Tallies
     Tallies tallies;
 
@@ -62,8 +72,6 @@ int main()
         std::cout << rel_k_eff[i] << '\n';
     }   
 
-
-    
 
 /*
 
@@ -125,4 +133,4 @@ int main()
 
 
 
-}
+} 

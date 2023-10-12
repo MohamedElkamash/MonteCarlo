@@ -17,15 +17,15 @@ InputParameters::InputParameters() :
 {
     //Reserving memory
     _bins_per_main_cell_count.reserve(_main_cells_count);
-    _cells_coordinates.reserve(_main_cells_count);
+    _main_cells_coordinates.reserve(_main_cells_count);
     _cross_sections.reserve(_materials_count);
 
     //Enter the coordinates of the cell boundaries
     //index is the cell id
     //first entry is the left boundary coordinate
     //second entry is the right boundary coordinate
-    _cells_coordinates[0] = {0.0, 50};
-    _cells_coordinates[1] = {50, 100};
+    _main_cells_coordinates[0] = {0.0, 50.0};
+    _main_cells_coordinates[1] = {50.0, 100.0};
 
     //Enter the number of bins in each cell
     //index is the cell id
@@ -60,7 +60,7 @@ int InputParameters::materialCount()
 { return _materials_count; }
 
 std::array<double, cell_boundaries_count> InputParameters::cellCoordinates(int cell_id)
-{ return _cells_coordinates[cell_id]; }
+{ return _main_cells_coordinates[cell_id]; }
 
 std::map<std::string, double> InputParameters::crossSections(int material_id)
 { return _cross_sections[material_id]; }

@@ -4,6 +4,7 @@
 #include "Sampling.h"
 #include <cmath>
 #include <iostream>
+#include <algorithm>
 
 Simulator::Simulator(Domain & domain, Tallies & tallies):
 _domain(domain),
@@ -40,6 +41,8 @@ void Simulator::generateCycleZero()
         double random_mu = sampling::mu();
         Neutron neutron(id, random_x, random_mu);
         int cell = neutronCellIndex(neutron);
+        //std::cout << "x: " << neutron.x() << " in cell: " << cell << std::endl;
+
         _tallies.incrementFissionNeutrons(cell);
         _neutron_bank.push(neutron);
     }
@@ -158,7 +161,13 @@ void Simulator::randomWalk(Neutron & neutron)
 
 
 int Simulator::neutronCellIndex(Neutron & neutron)
-{ return floor(neutron.x() / _domain.cellWidth()); }
+{ 
+    std::vector<double> surfaces = _domain.surfaces();
+    double x = neutron.x();
+    auto it = std::lower_bound(surfaces.begin(), surfaces.end(), x);
+    int pos = (it - surfaces.begin()) - 1;
+    return pos;
+}
 
 
 int Simulator::neutronMaterialIndex(Neutron & neutron)

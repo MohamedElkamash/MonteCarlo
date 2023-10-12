@@ -53,7 +53,7 @@ class InputParameters
 
     //carries coordinates of surfaces bounding each region
     //index 0: left surface & index 1: right surface
-    std::vector<std::array<double, cell_boundaries_count>> _cells_coordinates;
+    std::vector<std::array<double, cell_boundaries_count>> _main_cells_coordinates;
 
     //carries cross_sections of each material
     std::vector<std::map<std::string, double>> _cross_sections;
