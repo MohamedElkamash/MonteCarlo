@@ -30,6 +30,9 @@ class Tallies
     //returns relative change in k eff between two cycles
     std::vector<double> relativeKeff();
 
+    //returns the track length tally
+    std::vector<double> trackLength();
+
     //returns flux distribution over active cycles
     std::vector<std::vector<double>> flux();
 
@@ -45,6 +48,9 @@ class Tallies
     //sets the fission neutron tally to zero
     void flushFissionNeutrons();
 
+    //sets the track length to zero for next cycle
+    void flushTracklength();
+
     //fill normalized fission neutrons
     void fillNormalizedFissionNeutrons(int i_cycle, int bins);
 
@@ -59,6 +65,12 @@ class Tallies
 
     //calculates relative change in k eff between two successive cycles
     void calculateRelativeKEff();
+
+    //updates the track length sum of a cell
+    void updateTrackLength(double l, int bin);
+
+    //calculate flux
+    void calculateFlux(int i_cycle, std::vector<double> & bins_width);
 
     private:
 
@@ -82,6 +94,9 @@ class Tallies
 
     //cumulative average keff
     std::vector<double> _k_eff_cumulative;
+
+    //track length
+    std::vector<double> _track_length;
 
     //flux distribution over active cycles
     std::vector<std::vector<double>> _flux;

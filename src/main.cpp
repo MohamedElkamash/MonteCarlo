@@ -6,13 +6,7 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
-#include <cmath>
-#include <string>
-#include <array>
 #include <vector>
-#include <map>
-#include <queue>
-#include <random>
 
 
 int main()
@@ -34,6 +28,27 @@ int main()
 
     //start the neutron simulation 
     simulator.run();
+
+    std::vector<std::vector<double>> matrix = tallies.flux();
+    //std::ofstream results("results_new.csv");
+
+   int bins = domain.cellCount();
+
+  /*   for (int i = 0; i < bins; ++i)
+    {
+        std::cout << domain.binsWidthVector()[i] << '\n';
+    }  */
+ 
+    std::cout << "flux" << '\n';
+    for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES; ++i)
+    {
+        std::cout << "cycle: " << i << std::endl;
+        for (int j = 0; j < bins; ++j)
+        {
+            std::cout  << tallies.flux()[i][j] << '\n';
+        }
+        std::cout << '\n';
+    }  
 
 
 /*     std::vector<double> k_eff = tallies.kEff();

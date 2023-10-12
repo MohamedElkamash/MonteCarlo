@@ -34,3 +34,13 @@ double Domain::cellWidth(int id)
 
 int Domain::materialCount()
 { return _materials.size(); }
+
+std::vector<double> Domain::binsWidthVector()
+{
+    std::vector<double> bins_width;
+    int bins = cellCount();
+    for (int i = 0; i < bins; ++i)
+        bins_width.push_back(cellWidth(i));
+    
+    return bins_width;
+}

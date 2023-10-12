@@ -40,6 +40,9 @@ class Domain
     //returns cell width
     double cellWidth(int id);
 
+    //returns vector of cell widths
+    std::vector<double> binsWidthVector();
+
     //returns number of materials in the domain
     int materialCount();
 

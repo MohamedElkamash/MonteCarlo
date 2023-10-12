@@ -19,9 +19,6 @@ std::vector<std::vector<int>> Tallies::normalizedFissionNeutrons()
 std::vector<double> Tallies::shannonEntropy()
 { return _shannon_entropy; }
 
-std::vector<std::vector<double>> Tallies::flux()
-{return _flux; }
-
 std::vector<double> Tallies::kEff()
 { return _k_eff; }
 
@@ -30,6 +27,13 @@ std::vector<double> Tallies::kEffCumulative()
 
 std::vector<double> Tallies::relativeKeff()
 { return _relative_k_eff; }
+
+std::vector<double> Tallies::trackLength()
+{ return _track_length; }
+
+std::vector<std::vector<double>> Tallies::flux()
+{return _flux; }
+
 
 void Tallies::dimensions(int bins)
 {
@@ -40,7 +44,8 @@ void Tallies::dimensions(int bins)
     _k_eff.resize(ACTIVE_CYCLES, 0);
     _k_eff_cumulative.resize(ACTIVE_CYCLES, 0);
     _relative_k_eff.resize(ACTIVE_CYCLES, 0);
-    _flux.resize(ACTIVE_CYCLES, std::vector<double>(bins, 0));
+    _track_length.resize(bins, 0);
+    _flux.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, std::vector<double>(bins, 0));
 }
 
 void Tallies::incrementFissionNeutrons(int bin)
@@ -135,3 +140,18 @@ void Tallies::calculateKeffCumulative()
     }
 }
 
+void Tallies::updateTrackLength(double l, int bin)
+{ _track_length[bin] += l; }
+
+void Tallies::flushTracklength()
+{
+    for (int i = 0; i < _track_length.size(); ++i)
+        _track_length[i] = 0;
+}
+
+void Tallies::calculateFlux(int i_cycle, std::vector<double> & bins_width)
+{
+    int bins = bins_width.size();
+    for (int bin = 0; bin < bins; ++bin)
+        _flux[i_cycle][bin] = _track_length[bin] / bins_width[bin] / NEUTRONS_PER_CYCLE;
+}

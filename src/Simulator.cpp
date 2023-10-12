@@ -16,23 +16,6 @@ std::queue<Neutron> Simulator::neutronBank()
 { return _neutron_bank; }
 
 
-//std::queue<Neutron> Simulator::unfilteredNeutronBank()
-//{ return _unfiltered_neutron_bank; }
-
-/* void Simulator::generateCycleZero()
-{
-    for (int id = 0; id < NEUTRONS_PER_CYCLE; ++id)
-    {
-        double random_x = sampling::x(_domain.xMin(), _domain.xMax()) *  ;
-        double random_mu = sampling::mu();
-        Neutron neutron(id, random_x, random_mu);
-        int cell = neutronCellIndex(neutron);
-        _tallies.incrementFissionNeutrons(cell);
-        _neutron_bank.push(neutron);
-    }
-    _tallies.fillNormalizedFissionNeutrons(0, _domain.cellCount());
-}  */
-
 void Simulator::generateCycleZero()
 {
     for (int id = 0; id < NEUTRONS_PER_CYCLE; ++id)
@@ -54,6 +37,7 @@ void Simulator::run()
 {
     int neutron_bank_size = _neutron_bank.size();
     int bins = _domain.cellCount();
+    std::vector<double> bins_width = _domain.binsWidthVector();
     
     for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES - 1; ++i)
     {
@@ -64,6 +48,8 @@ void Simulator::run()
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
+        //flush track length tally
+        _tallies.flushTracklength();
 
         //count number of neutrons simulated in each bin to avoid exceeding normalized number
         std::vector<int> neutrons_simulated_count(bins, 0);
@@ -80,17 +66,28 @@ void Simulator::run()
         }   
         _tallies.fillNormalizedFissionNeutrons(i+1, bins);
         _tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
+        _tallies.calculateFlux(i, bins_width);
         
        //calculate k for active cycles only
         if (i >=  INACTIVE_CYCLES)
         {
             _tallies.calculateKeff(_tallies.normalizedFissionNeutrons()[i - INACTIVE_CYCLES], 
                                    _tallies.fissionNeutrons(), i - INACTIVE_CYCLES);
-        } 
+        }
+
+
+/*             for (int k = 0; k < bins; ++k)
+            {
+                std::cout  << _tallies.trackLength()[k] << '\n';
+            }
+            std::cout << '\n'; */
+
+
     }
-    //calculate relative change in keff between two successive cycles
+
+    //calculate relative change in keff between two successive cycles and cumulative average of keff
     _tallies.calculateRelativeKEff();
-    _tallies.calculateKeffCumulative(); 
+    _tallies.calculateKeffCumulative();
 } 
 
 
@@ -129,7 +126,9 @@ void Simulator::randomWalk(Neutron & neutron)
         {
             //get the material id of the neutron before transporting to the new cell
             i_old_material = neutronMaterialIndex(neutron);
-            //transport the neutron to the surface
+            //transport the neutron to the surface and update the flux tally
+            double l = fabs(neutron.x() - x_nearest_surface);
+            _tallies.updateTrackLength(l, neutronCellIndex(neutron));
             neutron.updateX(x_nearest_surface);
 
             //check if the neutron leaked
@@ -206,7 +205,9 @@ bool Simulator::isFirstSmaller(double x, double y, double mu)
 
 void Simulator::collide(Neutron & neutron, double x_next_collision, bool & is_absorbed)
 {
-            //move the neutron to the position of collision
+            //move the neutron to the position of collision and update the flux tally
+            double l = fabs(neutron.x() - x_next_collision);
+            _tallies.updateTrackLength(l, neutronCellIndex(neutron));
             neutron.updateX(x_next_collision);
             
             //sample type of collision
