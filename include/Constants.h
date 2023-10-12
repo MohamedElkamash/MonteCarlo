@@ -4,10 +4,10 @@
 const int NEUTRONS_PER_CYCLE = 10000;
 
 //number of inactive cycles to converge fission source
-const int INACTIVE_CYCLES = 10;
+const int INACTIVE_CYCLES = 5;
 
 //number of active cycles to calculate criticality and flux
-const int ACTIVE_CYCLES = 10;
+const int ACTIVE_CYCLES = 5;
 
 //used to transport neutron little bit away from the surface
 const double epilson = 1e-10;
