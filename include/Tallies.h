@@ -21,9 +21,6 @@ class Tallies
     //returns Shannon entropy
     std::vector<double> shannonEntropy();
 
-    //returns flux distribution over active cycles
-    std::vector<std::vector<double>> flux();
-
     //returns k_eff over active cycles
     std::vector<double> kEff();
 
@@ -32,6 +29,9 @@ class Tallies
 
     //returns relative change in k eff between two cycles
     std::vector<double> relativeKeff();
+
+    //returns flux distribution over active cycles
+    std::vector<std::vector<double>> flux();
 
     //sets the dimensions of the tallies;
     void dimensions(int bins);
@@ -59,7 +59,6 @@ class Tallies
 
     //calculates relative change in k eff between two successive cycles
     void calculateRelativeKEff();
-
 
     private:
 
