@@ -2,15 +2,20 @@
 #include "Domain.h"
 #include "Simulator.h"
 #include "Tallies.h"
+#include "Finalizer.h"
 
 #include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <chrono>
 
 
 int main()
 {
+    //start timer
+    auto start = std::chrono::high_resolution_clock::now();
+
     //Read input parameters
     InputParameters parameters;
 
@@ -29,15 +34,23 @@ int main()
     //start the neutron simulation 
     simulator.run();
 
-    std::vector<std::vector<double>> matrix = tallies.flux();
-    //std::ofstream results("results_new.csv");
+    //outputs
+    std::ofstream results("results.txt");
+    Finalizer finalizer(results, tallies, domain.cellCount());
+    finalizer.run();
+    results.close();
 
-   int bins = domain.cellCount();
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
+    std::cout << "duration =  " << duration.count() << " s" << std::endl;
 
   /*   for (int i = 0; i < bins; ++i)
     {
         std::cout << domain.binsWidthVector()[i] << '\n';
     }  */
+
+   /*      std::vector<std::vector<double>> matrix = tallies.flux();
+    //std::ofstream results("results_new.csv");
  
     std::cout << "flux" << '\n';
     for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES; ++i)
@@ -51,7 +64,7 @@ int main()
     }  
 
 
-/*     std::vector<double> k_eff = tallies.kEff();
+    std::vector<double> k_eff = tallies.kEff();
     std::vector<double> rel_k_eff = tallies.relativeKeff();
     std::vector<double> k_cum = tallies.kEffCumulative();
     int size_k = k_eff.size();
@@ -76,8 +89,10 @@ int main()
      for (int i = 0; i < size_rel; ++i)
     {
         std::cout << rel_k_eff[i] << '\n';
-    }    */
-  
+    }    
+
+
+ */
 
  /*    results << tallies.fissionNeutrons().size() << std::endl;
 
@@ -89,12 +104,12 @@ int main()
     } */
   
 
-    /* std::vector<std::vector<int>> matrix = tallies.normalizedFissionNeutrons();
+/*      std::vector<std::vector<int>> matrix = tallies.normalizedFissionNeutrons();
     std::ofstream results("results_new.csv");
 
-    int bins = domain.cellCount();  */
-/* 
-     results << "normalized fission neutrons" << '\n';
+    //int bins = domain.cellCount();  
+ 
+    results << "normalized fission neutrons" << '\n';
     for (int i = 0; i < INACTIVE_CYCLES; ++i)
     {
         results << "cycle: " << i << std::endl;
@@ -103,13 +118,13 @@ int main()
             results  << tallies.normalizedFissionNeutrons()[i][j] << '\n';
         }
         results << ',';
-    } */ 
+    }   */
 
- /* for (auto & row : matrix) {
+/*  for (auto & row : matrix) {
   for (auto col : row)
     results << col <<',';
   results << '\n';
-} */ 
+}   */
 
 /*     results << "max relative change " << std::endl;
     for (int i = 0; i < INACTIVE_CYCLES - 1; ++i)

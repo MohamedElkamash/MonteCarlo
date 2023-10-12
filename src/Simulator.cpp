@@ -6,15 +6,14 @@
 #include <iostream>
 #include <algorithm>
 
+
 Simulator::Simulator(Domain & domain, Tallies & tallies):
 _domain(domain),
 _tallies(tallies)
 { _tallies.dimensions(_domain.cellCount()); }
 
-
 std::queue<Neutron> Simulator::neutronBank()
 { return _neutron_bank; }
-
 
 void Simulator::generateCycleZero()
 {
@@ -24,14 +23,10 @@ void Simulator::generateCycleZero()
         double random_mu = sampling::mu();
         Neutron neutron(id, random_x, random_mu);
         int cell = neutronCellIndex(neutron);
-        //std::cout << "x: " << neutron.x() << " in cell: " << cell << std::endl;
-
         _tallies.incrementFissionNeutrons(cell);
         _neutron_bank.push(neutron);
     }
-    _tallies.fillNormalizedFissionNeutrons(0, _domain.cellCount());
 }  
-
 
 void Simulator::run()
 {
@@ -39,12 +34,12 @@ void Simulator::run()
     int bins = _domain.cellCount();
     std::vector<double> bins_width = _domain.binsWidthVector();
     
-    for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES - 1; ++i)
+    for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES; ++i)
     {
+        _tallies.fillNormalizedFissionNeutrons(i, bins);
+
         //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
         std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
-
-        //std::cout << std::accumulate(previous_fission_neutrons.begin(), previous_fission_neutrons.end(), 0) << '\n';
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
@@ -64,7 +59,7 @@ void Simulator::run()
                 randomWalk(neutron);
             _neutron_bank.pop();
         }   
-        _tallies.fillNormalizedFissionNeutrons(i+1, bins);
+
         _tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
         _tallies.calculateFlux(i, bins_width);
         
@@ -74,22 +69,11 @@ void Simulator::run()
             _tallies.calculateKeff(_tallies.normalizedFissionNeutrons()[i - INACTIVE_CYCLES], 
                                    _tallies.fissionNeutrons(), i - INACTIVE_CYCLES);
         }
-
-
-/*             for (int k = 0; k < bins; ++k)
-            {
-                std::cout  << _tallies.trackLength()[k] << '\n';
-            }
-            std::cout << '\n'; */
-
-
     }
-
     //calculate relative change in keff between two successive cycles and cumulative average of keff
     _tallies.calculateRelativeKEff();
     _tallies.calculateKeffCumulative();
 } 
-
 
 void Simulator::randomWalk(Neutron & neutron)
 {
@@ -113,10 +97,8 @@ void Simulator::randomWalk(Neutron & neutron)
             x_next_collision = xNextCollision(neutron);
         }
         is_material_constant = false;
-
         //calculate distance to nearest surface
         double x_nearest_surface = xNearestSurface(neutron);
-
         //compare distance to next collision and distance to nearest surface
         will_collide = isFirstSmaller(x_next_collision, x_nearest_surface, neutron.mu());
         
@@ -149,15 +131,11 @@ void Simulator::randomWalk(Neutron & neutron)
                 i_new_material = neutronMaterialIndex(neutron);
                 //if material didn't change update distance to next collision without sampling
                 if (i_new_material == i_old_material)
-                {
                     is_material_constant = true;
-                    //std::cout << "change cell but same material" << std::endl;
-                }
             }
         }    
     }
 }
-
 
 int Simulator::neutronCellIndex(Neutron & neutron)
 { 
@@ -168,13 +146,11 @@ int Simulator::neutronCellIndex(Neutron & neutron)
     return pos;
 }
 
-
 int Simulator::neutronMaterialIndex(Neutron & neutron)
 {
     int i_cell = neutronCellIndex(neutron);
     return _domain.cells()[i_cell].material().id(); 
 }
-
 
 double Simulator::xNextCollision(Neutron & neutron)
 {
@@ -184,24 +160,19 @@ double Simulator::xNextCollision(Neutron & neutron)
     return x + (- std::log(randomNumber()) / _domain.cells()[i].material().totalXS() * mu);
 }
 
-
 double Simulator::xNearestSurface(Neutron & neutron)
 {
     double nearest_surface = 0;
     int i = neutronCellIndex(neutron);
-
     if (neutron.isDirectionPositive())
         nearest_surface = _domain.cells()[i].xRight();
     else
         nearest_surface = _domain.cells()[i].xLeft();
-
     return nearest_surface;
 } 
 
-
 bool Simulator::isFirstSmaller(double x, double y, double mu)
 { return x < y && mu > 0 || x > y && mu < 0; }
-
 
 void Simulator::collide(Neutron & neutron, double x_next_collision, bool & is_absorbed)
 {
@@ -217,11 +188,7 @@ void Simulator::collide(Neutron & neutron, double x_next_collision, bool & is_ab
                 is_absorbed = true;
             }
             else
-            {
-                scatter(neutron);
-                //std::cout << neutron.mu() << std::endl;
-            }
-                    
+                scatter(neutron);               
 }
 
 bool Simulator::isAbsorbed(Neutron & neutron)
@@ -232,13 +199,11 @@ bool Simulator::isAbsorbed(Neutron & neutron)
     double absorption_xs = _domain.materials()[i_material].crossSections()["absorption_xs"];
     double total_xs = _domain.materials()[i_material].totalXS();
     double relative_absorption_xs = absorption_xs / total_xs;
-
     return random_number < relative_absorption_xs;
 }
 
 void Simulator::absorb(Neutron & neutron)
 {
-    //std::cout << "absorbed" << std::endl;
     //get current material id of the neutron
     int id = neutronMaterialIndex(neutron);
     //get cross sections of the material
@@ -265,10 +230,8 @@ void Simulator::absorb(Neutron & neutron)
     }
 }
 
-
 void Simulator::scatter(Neutron & neutron)
 {
-    //std::cout << "scattered" << std::endl;
     //current mu
     double mu = neutron.mu();
     //sample scattering angle
@@ -280,41 +243,6 @@ void Simulator::scatter(Neutron & neutron)
     //update neutron angle
     neutron.updateMu(mu_new);
 }
-
-//void Simulator::scatter(Neutron & neutron)
-/* {
-    //std::cout << "scattered" << std::endl;
-    //current mu
-    double mu = neutron.mu();
-    //sample scattering angle
-    double mu_0 = sampling::mu();
-    //sample azimuthal angle (in radians)
-    double phi = sampling::phi();
-    double cos_phi = cos(phi);
-
-    //calculate constants of the quadratic equation to solve for new mu
-    double a = pow(cos_phi, 2) * (pow(mu, 2) - 1) - 1;
-    double b = 2 * mu * mu_0;
-    double c = pow(cos_phi, 2) * (1 - pow(mu, 2)) - pow(mu, 2) * pow(mu_0, 2);
-
-    //calculate discriminant
-    double d = pow(b, 2) - 4 * a * c;
-
-    //calculate new angle
-    //alternate between two roots
-    static int i = 0;
-    double mu_new = 0;
-    
-    if (i % 2 == 0)
-        mu_new = (-b + sqrt(d)) / (2 * a);
-    else
-        mu_new = (-b - sqrt(d)) / (2 * a);
-    
-    ++i;
-    //update neutron angle
-    neutron.updateMu(mu_new);
-} */
-
 
 bool Simulator::isLeaked(double x, double mu)
 { return x >= _domain.xMax() && mu > 0 || x <= _domain.xMin() && mu < 0; }

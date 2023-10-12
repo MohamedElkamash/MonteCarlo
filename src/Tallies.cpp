@@ -121,15 +121,15 @@ void Tallies::calculateKeff(std::vector<int> fission_0, std::vector<int> fission
 
 void Tallies::calculateRelativeKEff()
 {
-    int cycles = _k_eff.size() - 1;
-    for (int i = 0; i < cycles; ++i)
-        _relative_k_eff[i] = fabs(_k_eff[i+1] - _k_eff[i]) / _k_eff[i]; 
+    int cycles = _k_eff.size();
+    for (int i = 1; i < cycles; ++i)
+        _relative_k_eff[i] = fabs(_k_eff[i] - _k_eff[i-1]) / _k_eff[i-1]; 
 }
 
 void Tallies::calculateKeffCumulative()
 {
 
-    for (int i = 0; i < ACTIVE_CYCLES - 1; ++i)
+    for (int i = 0; i < ACTIVE_CYCLES; ++i)
     {
         double sum = 0;
         for (int j = 0; j <= i; ++j)
