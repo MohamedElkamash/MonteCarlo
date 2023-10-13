@@ -45,7 +45,7 @@ void Tallies::dimensions(int bins)
     _k_eff_cumulative.resize(ACTIVE_CYCLES, 0);
     _relative_k_eff.resize(ACTIVE_CYCLES, 0);
     _track_length.resize(bins, 0);
-    _flux.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, std::vector<double>(bins, 0));
+    _flux.resize(ACTIVE_CYCLES, std::vector<double>(bins, 0));
 }
 
 void Tallies::incrementFissionNeutrons(int bin)
@@ -145,6 +145,16 @@ void Tallies::calculateRelativeKEff()
         _relative_k_eff[i] = fabs(_k_eff[i] - _k_eff[i-1]) / _k_eff[i-1]; 
 }
 
+std::vector<double> Tallies::relativeKeffCumulative()
+{
+    std::vector<double> relative_k_eff_cumulative;
+    relative_k_eff_cumulative.push_back(0);
+    int cycles = _k_eff_cumulative.size();
+    for (int i = 1; i < cycles; ++i)
+        relative_k_eff_cumulative.push_back(fabs(_k_eff_cumulative[i] - _k_eff_cumulative[i-1]) / _k_eff_cumulative[i-1]); 
+    return relative_k_eff_cumulative;
+}
+
 void Tallies::calculateKeffCumulative()
 {
 
@@ -173,4 +183,21 @@ void Tallies::calculateFlux(int i_cycle, std::vector<double> & bins_width)
     int bins = bins_width.size();
     for (int bin = 0; bin < bins; ++bin)
         _flux[i_cycle][bin] = _track_length[bin] / bins_width[bin] / NEUTRONS_PER_CYCLE;
+}
+
+std::vector<double> Tallies::averageFlux()
+{
+    std::vector<double> average_flux;
+    int bins = _fission_neutrons.size();
+    for (int i = 0; i < bins; ++i)
+    {
+        double sum = 0;
+    
+        for (int j = 0; j < ACTIVE_CYCLES; ++j)
+        {
+            sum += _flux[j][i];
+        }
+        average_flux.push_back(sum / ACTIVE_CYCLES);
+    }
+    return average_flux;
 }

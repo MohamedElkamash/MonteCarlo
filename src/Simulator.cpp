@@ -30,12 +30,15 @@ void Simulator::generateCycleZero()
 
 void Simulator::run()
 {
+    std::cout << "starting inactive cycle" << '\n';
     int neutron_bank_size = _neutron_bank.size();
     int bins = _domain.cellCount();
     std::vector<double> bins_width = _domain.binsWidthVector();
     
     for (int i = 0; i < INACTIVE_CYCLES + ACTIVE_CYCLES; ++i)
     {
+        std::cout << "cycle: " << i << '\n';
+
         _tallies.fillNormalizedFissionNeutrons(i, bins);
 
         //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
@@ -58,19 +61,20 @@ void Simulator::run()
             if (neutrons_simulated_count[bin] < _tallies.normalizedFissionNeutrons()[i][bin])
                 randomWalk(neutron);
             _neutron_bank.pop();
-        }   
-
-        //_tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
-        _tallies.calculateFlux(i, bins_width);
+        }
+        if(i == INACTIVE_CYCLES)
+            std::cout << '\n' << "starting active cycles"  << '\n';     
         
-       //calculate k for active cycles only
+       //calculate k and flux for active cycles only
         if (i >=  INACTIVE_CYCLES)
         {
+            _tallies.calculateFlux(i - INACTIVE_CYCLES, bins_width);
             _tallies.calculateKeff(_tallies.normalizedFissionNeutrons()[i - INACTIVE_CYCLES], 
                                    _tallies.fissionNeutrons(), i - INACTIVE_CYCLES);
+            std::cout << "k = " << _tallies.kEff()[i - INACTIVE_CYCLES] << '\n';
         }  
     }
-    //calculate relative change in keff between two successive cycles and cumulative average of keff
+    //Post Processing tallies
     _tallies.calculateRelativeKEff();
     _tallies.calculateKeffCumulative();
     _tallies.calculateMaxRelativeChangeFission(); 
@@ -86,7 +90,6 @@ void Simulator::randomWalk(Neutron & neutron)
     int i_old_material = neutronMaterialIndex(neutron);
     int i_new_material = i_old_material;
     double x_next_collision = xNextCollision(neutron);
-    //std::cout << "x next collision: " << x_next_collision << std::endl;
 
     while(!is_absorbed && !is_leaked)
     {

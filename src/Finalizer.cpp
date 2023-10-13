@@ -30,15 +30,15 @@ void Finalizer::run()
             _file << std::setw(11) << std::scientific << std::setprecision(2) 
                   << _tallies.normalizedFissionNeutrons()[i][j] / static_cast<double>(NEUTRONS_PER_CYCLE); 
         _file << std::setw(20) << std::scientific << _tallies.maxRelativeChangeFission()[i] << '\n';
-    }  
-
+    }
+    dashLine();  
     _file << "\n\n";
 
     //print flux
     tableTitle("Flux");
     _file << std::left
-    << std::setw(8) << "cycle";
-    for (int i = 0; i < cycles; ++i)
+    << std::setw(15) << "Active Cycle";
+    for (int i = 0; i < ACTIVE_CYCLES; ++i)
     {
         if (i == 0)
         {
@@ -48,33 +48,44 @@ void Finalizer::run()
             dashLine();
         }
         
-        _file << '\n' << std::setw(8) << i+1;
+        _file << '\n' << std::setw(15) << i+1;
         for (int j = 0; j < _bins; ++j)
         {
              _file << std::setw(11) << std::scientific << std::setprecision(2) 
                    << _tallies.flux()[i][j];
         }
- 
-    } 
+    }
+        _file << '\n';
+        dashLine();
+        _file << std::setw(15) << "average";
+        for (int j = 0; j < _bins; ++j)
+        {
+             _file << std::setw(11) << std::scientific << std::setprecision(2) 
+                   << _tallies.averageFlux()[j];
+        }
+        _file << '\n';
+        dashLine();
 
     _file << "\n\n";
 
     //print criticality
     tableTitle("Criticality");
     _file << std::left
-    << std::setw(20) << "Active Cycle" 
-    << std::setw(20) << "k_eff"
-    << std::setw(20) << "rel_diff_k_eff"
-    << std::setw(20) << "k_eff_cumulative" 
+    << std::setw(21) << "Active Cycle" 
+    << std::setw(21) << "k_eff"
+    << std::setw(21) << "rel_diff_k_eff"
+    << std::setw(21) << "k_eff_cumulative"
+    << std::setw(21) << "rel_diff_k_cumulative" 
     << '\n';
     dashLine();
     for (int i = 0; i < ACTIVE_CYCLES; ++i)
     {
         _file
-        << std::setw(20) << i+1
-        << std::setw(20) << std::fixed      << std::setprecision(5) << _tallies.kEff()[i]
-        << std::setw(20) << std::scientific << std::setprecision(2) << _tallies.relativeKeff()[i]
-        << std::setw(20) << std::fixed      << std::setprecision(5) << _tallies.kEffCumulative()[i] 
+        << std::setw(21) << i+1
+        << std::setw(21) << std::fixed      << std::setprecision(5) << _tallies.kEff()[i]
+        << std::setw(21) << std::scientific << std::setprecision(2) << _tallies.relativeKeff()[i]
+        << std::setw(21) << std::fixed      << std::setprecision(5) << _tallies.kEffCumulative()[i]
+        << std::setw(21) << std::scientific << std::setprecision(5) << _tallies.relativeKeffCumulative()[i] 
         << '\n';
     }
     dashLine();

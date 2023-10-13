@@ -30,6 +30,9 @@ class Tallies
     //returns relative change in k eff between two cycles
     std::vector<double> relativeKeff();
 
+    //returns relative change in k eff between two cycles
+    std::vector<double> relativeKeffCumulative();
+
     //returns the track length tally
     std::vector<double> trackLength();
 
@@ -73,6 +76,7 @@ class Tallies
     void calculateFlux(int i_cycle, std::vector<double> & bins_width);
 
     //calculate average flux over all active cycles
+    std::vector<double> averageFlux();
 
     private:
 
