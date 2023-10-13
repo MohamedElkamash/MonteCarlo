@@ -7,13 +7,13 @@
 Tallies::Tallies()
 {}
 
-std::vector<int> Tallies::fissionNeutrons()
+std::vector<long int> Tallies::fissionNeutrons()
 { return _fission_neutrons; }
 
 std::vector<double> Tallies::maxRelativeChangeFission()
 { return _max_relative_change_fission; }
 
-std::vector<std::vector<int>> Tallies::normalizedFissionNeutrons()
+std::vector<std::vector<long int>> Tallies::normalizedFissionNeutrons()
 { return _normalized_fission_neutrons; }
 
 std::vector<double> Tallies::shannonEntropy()
@@ -40,7 +40,7 @@ void Tallies::dimensions(int bins)
     _fission_neutrons.resize(bins, 0);
     _max_relative_change_fission.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, 0);
     _shannon_entropy.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, 0);
-    _normalized_fission_neutrons.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, std::vector<int>(bins, 0));
+    _normalized_fission_neutrons.resize(INACTIVE_CYCLES + ACTIVE_CYCLES, std::vector<long int>(bins, 0));
     _k_eff.resize(ACTIVE_CYCLES, 0);
     _k_eff_cumulative.resize(ACTIVE_CYCLES, 0);
     _relative_k_eff.resize(ACTIVE_CYCLES, 0);
@@ -57,7 +57,26 @@ void Tallies::flushFissionNeutrons()
         _fission_neutrons[i] = 0;
 }
 
-void Tallies::calculateMaxRelativeChangeFission(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle)
+void Tallies::calculateMaxRelativeChangeFission()
+{
+    int cycles = INACTIVE_CYCLES + ACTIVE_CYCLES;
+    int bins = _normalized_fission_neutrons[0].size();
+    for (int i = 1; i < cycles; ++i)
+    {
+        std::vector<double> relative_change(bins, 0);
+        double max_relative_change = 0;
+        for (int j = 0; j < bins; ++j)
+        {
+            relative_change[j] = fabs(_normalized_fission_neutrons[i][j] -  _normalized_fission_neutrons[i-1][j]) / 
+                                      _normalized_fission_neutrons[i-1][j];
+            if (max_relative_change < relative_change[j])
+                max_relative_change = relative_change[j];
+        }
+        _max_relative_change_fission[i] = max_relative_change;
+    }     
+}
+
+/* void Tallies::calculateMaxRelativeChangeFission(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle)
 {
     //carries the relative change in each bin
     std::vector<double> relative_change(fission_0.size(), 0);
@@ -71,7 +90,7 @@ void Tallies::calculateMaxRelativeChangeFission(std::vector<int> fission_0, std:
     }
     //fill the tally vector
     _max_relative_change_fission[i_cycle] = max_relative_change;      
-}
+} */
 
 void Tallies::fillNormalizedFissionNeutrons(int i_cycle, int bins)
 {
@@ -111,7 +130,7 @@ void Tallies::calculateShannonEntropy(int bins)
     }
 }
 
-void Tallies::calculateKeff(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle)
+void Tallies::calculateKeff(std::vector<long int> fission_0, std::vector<long int> fission_1, int i_cycle)
 {
     int bins = fission_0.size();
     double sum_0 = std::accumulate(fission_0.begin(), fission_0.end(), 0);

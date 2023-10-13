@@ -10,13 +10,13 @@ class Tallies
     Tallies();
 
     //returns the actual number of fission neutrons in a cycle
-    std::vector<int> fissionNeutrons();
+    std::vector<long int> fissionNeutrons();
 
     //returns the max relative change in fission neutrons between two cycles for all cycles
     std::vector<double> maxRelativeChangeFission();
 
     //returns fission neutrons distribution over all cycles
-    std::vector<std::vector<int>> normalizedFissionNeutrons();
+    std::vector<std::vector<long int>> normalizedFissionNeutrons();
 
     //returns Shannon entropy
     std::vector<double> shannonEntropy();
@@ -43,7 +43,7 @@ class Tallies
     void incrementFissionNeutrons(int bin);
 
     //calculates the max relative change in fission neutrons
-    void calculateMaxRelativeChangeFission(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle);
+    void calculateMaxRelativeChangeFission();
 
     //sets the fission neutron tally to zero
     void flushFissionNeutrons();
@@ -58,7 +58,7 @@ class Tallies
     void calculateShannonEntropy(int bins);
 
     //calculates keff for each cycle
-    void calculateKeff(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle);
+    void calculateKeff(std::vector<long int> fission_0, std::vector<long int> fission_1, int i_cycle);
 
     //calculates k eff cumulative
     void calculateKeffCumulative();
@@ -69,19 +69,21 @@ class Tallies
     //updates the track length sum of a cell
     void updateTrackLength(double l, int bin);
 
-    //calculate flux
+    //calculate flux for every active cycle
     void calculateFlux(int i_cycle, std::vector<double> & bins_width);
+
+    //calculate average flux over all active cycles
 
     private:
 
     //actual number of fission neutrons in one cycle
-    std::vector<int> _fission_neutrons;
+    std::vector<long int> _fission_neutrons;
 
     //maximum relative change in fission neutrons between two successive cycles 
     std::vector<double> _max_relative_change_fission;
 
     //normalized fission neutrons distribution over all cycles
-    std::vector<std::vector<int>> _normalized_fission_neutrons;
+    std::vector<std::vector<long int>> _normalized_fission_neutrons;
 
     //Shannon entropy
     std::vector<double> _shannon_entropy;

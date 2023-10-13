@@ -39,7 +39,7 @@ void Simulator::run()
         _tallies.fillNormalizedFissionNeutrons(i, bins);
 
         //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
-        std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
+        //std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
@@ -60,7 +60,7 @@ void Simulator::run()
             _neutron_bank.pop();
         }   
 
-        _tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
+        //_tallies.calculateMaxRelativeChangeFission(previous_fission_neutrons, _tallies.fissionNeutrons(), i);
         _tallies.calculateFlux(i, bins_width);
         
        //calculate k for active cycles only
@@ -68,11 +68,12 @@ void Simulator::run()
         {
             _tallies.calculateKeff(_tallies.normalizedFissionNeutrons()[i - INACTIVE_CYCLES], 
                                    _tallies.fissionNeutrons(), i - INACTIVE_CYCLES);
-        }
+        }  
     }
     //calculate relative change in keff between two successive cycles and cumulative average of keff
     _tallies.calculateRelativeKEff();
     _tallies.calculateKeffCumulative();
+    _tallies.calculateMaxRelativeChangeFission(); 
 } 
 
 void Simulator::randomWalk(Neutron & neutron)

@@ -93,4 +93,4 @@ void Finalizer::tableTitle(std::string title)
     _file << title << '\n';
     dashLine();
     dashLine();
-}
+} 

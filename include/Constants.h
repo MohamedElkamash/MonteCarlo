@@ -7,7 +7,7 @@ const int NEUTRONS_PER_CYCLE = 10000;
 const int INACTIVE_CYCLES = 10;
 
 //number of active cycles to calculate criticality and flux
-const int ACTIVE_CYCLES = 5;
+const int ACTIVE_CYCLES = 20;
 
 //used to transport neutron little bit away from the surface
 const double epilson = 1e-10;

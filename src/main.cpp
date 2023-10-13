@@ -31,14 +31,14 @@ int main()
     //Populate the neutron bank with neutrons of cycle zero
     simulator.generateCycleZero();
 
-    //start the neutron simulation 
+     //start the neutron simulation 
     simulator.run();
 
     //outputs
     std::ofstream results("results.txt");
     Finalizer finalizer(results, tallies, domain.cellCount());
     finalizer.run();
-    results.close();
+    results.close();   
 
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
