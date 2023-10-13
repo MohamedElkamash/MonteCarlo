@@ -4,10 +4,8 @@
 #include "Tallies.h"
 #include "Finalizer.h"
 
-#include <iomanip>
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <chrono>
 
 
@@ -40,7 +38,9 @@ int main()
     finalizer.run();
     results.close();   
 
+    //print runtime
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
     std::cout << '\n' << "duration =  " << duration.count() << " s" << std::endl;
-} 
+}
+ 

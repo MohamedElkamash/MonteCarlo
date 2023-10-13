@@ -89,6 +89,9 @@ void Finalizer::run()
         << '\n';
     }
     dashLine();
+    
+    //print flux in csv file
+    csv();
 }
 
 void Finalizer::dashLine()
@@ -104,4 +107,52 @@ void Finalizer::tableTitle(std::string title)
     _file << title << '\n';
     dashLine();
     dashLine();
-} 
+}
+
+void Finalizer::csv()
+{
+    std::vector<std::vector<double>> flux = _tallies.flux();
+    std::vector<std::vector<double>> flux_transpose;
+    std::vector<std::vector<long int>> normalized_fission_source = _tallies.normalizedFissionNeutrons();
+    std::vector<std::vector<double>> fission_transpose;
+    flux_transpose.resize(_bins, std::vector<double>(ACTIVE_CYCLES, 0));
+    fission_transpose.resize(_bins, std::vector<double>(ACTIVE_CYCLES + INACTIVE_CYCLES, 0));
+    double n = static_cast<double>(NEUTRONS_PER_CYCLE);
+    int cycles = ACTIVE_CYCLES + INACTIVE_CYCLES;
+
+    for (int i = 0; i < _bins; ++i)
+        for(int j = 0; j < ACTIVE_CYCLES; ++j)
+          flux_transpose[i][j] = flux[j][i];
+
+    for (int i = 0; i < _bins; ++i)
+        for(int j = 0; j < cycles; ++j)
+            fission_transpose[i][j] = normalized_fission_source[j][i] / n;
+ 
+
+    std::ofstream out("results.csv");
+    out << "normalized_fission_source_neutrons" << '\n' << "y axis is bin number\n";
+    for (int i = 0; i < cycles; ++i)
+        out << "cycle " << i+1 << ',';
+    out << '\n';
+
+    for (auto& row : fission_transpose) 
+    {
+        for (auto col : row)
+            out << col <<',';
+        out << '\n';
+    }
+
+    out << "\n\n";
+
+    out << "flux" << '\n' << "y axis is bin number\n";
+    for (int i = 0; i < ACTIVE_CYCLES; ++i)
+        out << "Active Cycle " << i+1 << ',';
+    out << '\n';
+    for (auto& row : flux_transpose) 
+    {
+        for (auto col : row)
+            out << col <<',';
+        out << '\n';
+    }
+    out.close();
+}

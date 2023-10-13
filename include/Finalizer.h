@@ -18,6 +18,9 @@ class Finalizer
     //prints a table title
     void tableTitle(std::string title);
 
+    //prints data into csv
+    void csv();
+
 
     //prints a 
 
