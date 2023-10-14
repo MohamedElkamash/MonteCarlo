@@ -76,22 +76,6 @@ void Tallies::calculateMaxRelativeChangeFission()
     }     
 }
 
-/* void Tallies::calculateMaxRelativeChangeFission(std::vector<int> fission_0, std::vector<int> fission_1, int i_cycle)
-{
-    //carries the relative change in each bin
-    std::vector<double> relative_change(fission_0.size(), 0);
-    double max_relative_change = 0;
-    int bins = fission_0.size();
-    for (int i = 0; i < bins; ++i)
-    {
-        relative_change[i] = static_cast<double>(abs(fission_1[i] - fission_0[i])) / static_cast<double>(fission_0[i]);
-        if (max_relative_change < relative_change[i])
-            max_relative_change = relative_change[i];
-    }
-    //fill the tally vector
-    _max_relative_change_fission[i_cycle] = max_relative_change;      
-} */
-
 void Tallies::fillNormalizedFissionNeutrons(int i_cycle, int bins)
 {
     double sum = std::accumulate(_fission_neutrons.begin(), _fission_neutrons.end(), 0);

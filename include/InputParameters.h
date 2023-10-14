@@ -1,16 +1,18 @@
-/*This class carries all the input parameters
-The geometery of the problem is divided into cells
-Each cell represents a homogeneous material
-Each cell is bounded by two surfaces
-Each cell is divided into number of bins to tally the flux distribution
-The user inputs the parameters of the problem, material properties, number of cells and number of bins*/
-
 #pragma once
 
 #include <string>
 #include <array>
 #include <vector>
 #include <map>
+
+/*This class carries all the input parameters
+The geometery of the problem is divided into cells
+Each cell represents a homogeneous material
+Each cell is bounded by two surfaces
+Each cell is divided into number of bins to tally the flux distribution
+The user inputs the parameters of the problem, material properties, number of cells and number of bins
+This class will be refined into the future to read the input parameters from a file*/
+
 
 //number of surfaces surrounding each cell is two only because it is 1D
 static const int cell_boundaries_count = 2;

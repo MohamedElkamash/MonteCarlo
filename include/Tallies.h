@@ -2,6 +2,9 @@
 
 #include <vector>
 
+/* Simulates the neutron inside the domain
+*/
+
 class Tallies
 {
     public:

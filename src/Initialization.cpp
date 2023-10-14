@@ -11,7 +11,6 @@ void initialization::domain(InputParameters & parameters, std::vector<Material> 
     int cell_count = initialization::cellCount(parameters);
     std::map<int, int> cell_material_map;
     initialization::cellMaterialMap(parameters, cell_material_map);
-    //double cell_width = initialization::cellWidth(parameters);
     initialization::cells(parameters, materials, cells, surfaces);
 }
     
@@ -52,38 +51,12 @@ void initialization::cellMaterialMap(InputParameters & parameters, std::map<int,
     }
 }
 
-/*double initialization::cellWidth(InputParameters & parameters)
-{
-    int main_cell_count = parameters.mainCellCount();
-    int cell_count = initialization::cellCount(parameters);
-    double x_domain_left_boundary = parameters.cellCoordinates(0)[0];
-    double x_domain_right_boundary = parameters.cellCoordinates(main_cell_count - 1)[1];
-    double domain_width = x_domain_right_boundary - x_domain_left_boundary;
-    double cell_width = domain_width / cell_count;
-    return cell_width;
-}*/
-
-/* double initialization::cellWidth(InputParameters & parameters)
-{
-
-     int main_cell_count = parameters.mainCellCount();
-    int cell_count = initialization::cellCount(parameters);
-    double x_domain_left_boundary = parameters.cellCoordinates(0)[0];
-    double x_domain_right_boundary = parameters.cellCoordinates(main_cell_count - 1)[1];
-    double domain_width = x_domain_right_boundary - x_domain_left_boundary;
-    double cell_width = domain_width / cell_count;
-    return cell_width; 
-} */
-
 void initialization::cells(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells,
                            std::vector<double> & surfaces)
 {
     double cell_count = initialization::cellCount(parameters);
-    //double cell_width = initialization::cellWidth(parameters);
     std::map<int, int> cell_material_map;
     initialization::cellMaterialMap(parameters, cell_material_map);
-    //double x_right = x_left + cell_width;
-
     int main_cell_count = parameters.mainCellCount();
     std::vector<double> cell_width_vector;     
     

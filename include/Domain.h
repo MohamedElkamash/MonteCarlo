@@ -9,6 +9,11 @@
 #include <string>
 #include <vector>
 
+/* This class carries all the information of the domain. 
+The domain consists of a vector of cells.
+Also the domain carries a vector of materials to carry all the cross sections of all the materials in the problem
+*/
+
 class Domain
 {
     public:

@@ -29,7 +29,7 @@ int main()
     //Populate the neutron bank with neutrons of cycle zero
     simulator.generateCycleZero();
 
-     //start the neutron simulation 
+    //start the neutron simulation 
     simulator.run();
 
     //outputs
@@ -43,4 +43,3 @@ int main()
     auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
     std::cout << '\n' << "duration =  " << duration.count() << " s" << std::endl;
 }
- 

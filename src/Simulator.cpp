@@ -42,7 +42,6 @@ void Simulator::run()
         _tallies.fillNormalizedFissionNeutrons(i, bins);
 
         //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
-        //std::vector<int> previous_fission_neutrons = _tallies.fissionNeutrons();
 
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();

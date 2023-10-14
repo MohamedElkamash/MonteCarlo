@@ -2,6 +2,9 @@
 
 #include "Material.h"
 
+/*This class describes the cell. 
+A cell consists of two surfaces and a material.*/
+
 class Cell
 {
     public:

@@ -3,6 +3,8 @@
 #include <string>
 #include <map>
 
+/*This class describes material cross sections*/
+
 class Material
 {
     public:

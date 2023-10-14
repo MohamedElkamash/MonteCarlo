@@ -4,6 +4,9 @@
 #include "Material.h"
 #include "Cell.h"
 
+/* This namespace contains the utility functions to construct the domain using the input parameters
+*/
+
 namespace initialization
 {
     void domain(InputParameters & parameters, std::vector<Material> & materials, std::vector<Cell> & cells, 

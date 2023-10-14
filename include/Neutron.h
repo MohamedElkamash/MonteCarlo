@@ -2,6 +2,9 @@
 
 #include "Cell.h"
 
+/*This class contain the main functionality of the neutron
+*/
+
 class Neutron
 {
     public:

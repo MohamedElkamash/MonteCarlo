@@ -2,6 +2,9 @@
 #include <string>
 #include <fstream>
 
+/* This class is responsible for printing the results in the output files
+*/
+
 class Finalizer
 {
     public:
