@@ -15,6 +15,6 @@ The output of the program will be two files.
 The first is results.txt which contains the full results for the fission source, flux and k_eff.
 The second file is results.csv which is simpler in plotting the results than the .txt file.
 
-I am sorry I didn't have time to generate docstrings. I have already downloaded doxygen but didn't have time to use it, but I have inline comments and class description in each file. I have been working on this for two weeks until midnight everyday because it is my first time to write a real program and my wife hates me now :'D. I hope you enjoy it. 
+I am sorry I didn't have time to generate docstrings. I have already downloaded doxygen but didn't have time to use it, but I have inline comments and class description in each file. 
 
 
