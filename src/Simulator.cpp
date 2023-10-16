@@ -40,9 +40,6 @@ void Simulator::run()
         std::cout << "cycle: " << i << '\n';
 
         _tallies.fillNormalizedFissionNeutrons(i, bins);
-
-        //keep a copy of the current fission neutrons tally before flushing to use it in relative change calculation
-
         //flush fission neutrons tally to populate with new generation from absorption
         _tallies.flushFissionNeutrons();
         //flush track length tally
