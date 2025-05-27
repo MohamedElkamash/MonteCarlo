@@ -17,7 +17,7 @@ The output of the program will be two files. \
 The first is results.txt which contains the full results for the fission source, flux and k_eff.\
 The second file is results.csv which is simpler in plotting the results than the .txt file.\
 \
-you could change the materials or the geometery in the inputparameters.cpp if you want to solve another problem\
+you could change the materials or the geometery in the inputparameters.cpp if you want to solve another problem.
 
 
 
