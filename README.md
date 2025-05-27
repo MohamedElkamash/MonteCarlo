@@ -2,7 +2,7 @@
 Elementary, 1D, one-speed monte carlo criticality neutron transport code
 
 User Guide\
-\
+
 To reproduce the results in the report\
 clone the github repository\
 Adjust the InputParameters.cpp and Constants.h files as you wish. (Currently they are adjusted to reproduce scenario 1)\
@@ -18,7 +18,6 @@ The first is results.txt which contains the full results for the fission source,
 The second file is results.csv which is simpler in plotting the results than the .txt file.\
 \
 you could change the materials or the geometery in the inputparameters.cpp if you want to solve another problem\
-\
-I am sorry I didn't have time to generate docstrings. I have already downloaded doxygen but didn't have time to use it, but I have inline comments and class description in each file. 
+
 
 
