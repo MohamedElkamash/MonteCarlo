@@ -1,7 +1,7 @@
 # MonteCarlo
 Elementary, 1D, one-speed monte carlo criticality neutron transport code
 
-User Guide\
+User Guide
 
 To reproduce the results in the report\
 clone the github repository\
